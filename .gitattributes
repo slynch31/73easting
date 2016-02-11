@@ -1,2 +1,2 @@
-#make sure windows doesn't blow up unix line endings
-text eol=lf
+#make sure windows doesn't blow up unix line endings for our netlogo files
+*.nlogo text eol=lf
