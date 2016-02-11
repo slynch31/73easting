@@ -1,26 +1,71 @@
-;; Sheep and wolves are both breeds of turtle.
-breed [sheep a-sheep]  ;; sheep is its own plural, so we use "a-sheep" as the singular.
-breed [wolves wolf]
-turtles-own [energy]       ;; both wolves and sheep have energy
+;;INTA 4742/6742 CX4232 CSE6742
+;;Spring 2016
+;;==================NOTES==================
+;; 10 Feb 2016
+;; =========Group Discussion=========
+;; model - training, IRG defenses,
+;; long tan battle reading? possibly use this as a basis for simulation and modeling
+;; potentially model as a 'size of tank' quantity? cross section of tank? tank speed
+;; Geography
+;; what makes a tank a tank? Techincal mismatch between US and IRG, and decisions made by each army are good fodder
+;; 3000m effective range on the M1A1
+;; =========Instructor Comments=========
+;; be careful of to oman variables
+;; IRG defensive? How would those have had a tangiable effect on the outcome of the battle? ONe thing we want to think about when we're doing more recent battles
+;; is as technically gets more advanced, communciations technology has a bigger role in the battles. that's one of the challenges for one of the more modern battles.
+;; If we have other data and examples to talk about, this is more data and motivation for what we should model and we should try to compare and contrast what we have.
+;; the more
+;; =========Class Today=========
+;; we're goign to do background research into what battle we're doing
+;; how did we get here, what's happenening the world, what are we tryign to accmomplish, going throught he timeline of the battle
+;; what occured when, what were the decision points for the battle, identify decision points and opporunties . Look at who was involved and
+;; what were the types of soldiers and equipment that were involved. Cristicsms of the battle that happened afterware. This can all go in
+;; story board of what happened. POSSIBLE PRESENTATION NEXT WEEK?
+;; second element - conception plans for the model - what's goign to be important to actually put in
+;; =========Research Question=========
+;; Broadly - impact of technology
+;; narrowly - invest in new technology/sights/etc
+;; ==================END NOTES==================
+
+;; TO-DO figure out how we're going to map elevation...see sand comment below
+globals [sand]  ;; track sand? Possibly make this elevation and have it linearly map onto hit chance?
+;; initialize Iraq IRG and US Army ACR tanks
+;; keep multiples plural, keep singular as 'a-'
+breed [m1a1s m1a1] ;; US Army M1A1
+breed [t72s t72] ;; Iraqi Republican Guard T-72
+;; breed [t55s a-t55] ;; Iraqi Republican Guard T-55 (possibly more 74 easting?) remove this for right now
+;; we'll go ahead and put in place holders for british tanks, IRG infantry, and US Army M2A3s to add complexity later
+;; although we might not do this after our initial review
+;; breed [challengers a-challenger] ;; British Challenger Tank
+;; breed [m2a3s a-m2a3] ;; US Army Bradley M2A3 IFV
+;; breed [IRG_infantrys a-IRG_infantry] ;; Iraqi Republican Guard Infantry
+;; breed [M-60s a-M-60] ;; US Army 'old' M-60 Patton Tanks
+;; breed [IRG_infantrys a-IRG_infantry] ;; US Army Bradley M2A3 IFV
+
+turtles-own [energy]       ;; both t72s and m1a1s have energy
 
 to setup
   clear-all
-  ask patches [ set pcolor green ]
-  set-default-shape sheep "sheep"
-  create-sheep initial-number-sheep  ;; create the sheep, then initialize their variables
+  ;;initial-number-m1a1s 9 ;;define 9 initial M1A1s
+  ;;initial-number-t72s 17 ;; define 17 initial T-72s
+  ask patches [ set pcolor brown ]
+  set-default-shape m1a1s "cow" ;; make m1a1s cows
+  ;;set-default-shape m1a1 "cow"  ;; make m1a1 cows
+  set-default-shape t72s "fish" ;; make t72s fish
+  ;;set-default-shape t72 "fish"  ;; make t72 fish
+  create-m1a1s initial-number-m1a1s  ;; create the m1a1s, then initialize their variables
   [
     set color white
     set size 1.5  ;; easier to see
     set label-color blue - 2
-    set energy 1 + random sheep-max-initial-energy
+    set energy 1 + random m1a1s-max-initial-energy
     setxy random-xcor random-ycor
   ]
-  set-default-shape wolves "wolf"
-  create-wolves initial-number-wolves  ;; create the wolves, then initialize their variables
+  create-t72s initial-number-t72s  ;; create the t72s, then initialize their variables
   [
     set color black
     set size 1.5  ;; easier to see
-    set energy random (2 * wolf-gain-from-food)
+    set energy random (2 * t72s-gain-from-food)
     setxy random-xcor random-ycor
   ]
   display-labels
@@ -29,17 +74,17 @@ end
 
 to go
   if not any? turtles [ stop ]
-  ask sheep [
+  ask m1a1s [
     move
     death
-    reproduce-sheep
+    reproduce-m1a1s
   ]
-  ask wolves [
+  ask t72s [
     move
-    set energy energy - 1  ;; wolves lose energy as they move
-    catch-sheep
+    set energy energy - 1  ;; t72s lose energy as they move
+    catch-m1a1s
     death
-    reproduce-wolves
+    reproduce-t72s
   ]
 end
 
@@ -49,25 +94,25 @@ to move  ;; turtle procedure
   fd 1
 end
 
-to reproduce-sheep  ;; sheep procedure
-  if random-float 100 < sheep-reproduce [  ;; throw "dice" to see if you will reproduce
+to reproduce-m1a1s  ;; m1a1s procedure
+  if random-float 100 < m1a1s-reproduce [  ;; throw "dice" to see if you will reproduce
     set energy (energy / 2)                ;; divide energy between parent and offspring
     hatch 1 [ rt random-float 360 fd 1 ]   ;; hatch an offspring and move it forward 1 step
   ]
 end
 
-to reproduce-wolves  ;; wolf procedure
-  if random-float 100 < wolf-reproduce [  ;; throw "dice" to see if you will reproduce
+to reproduce-t72s  ;; t72s procedure
+  if random-float 100 < t72s-reproduce [  ;; throw "dice" to see if you will reproduce
     set energy (energy / 2)               ;; divide energy between parent and offspring
     hatch 1 [ rt random-float 360 fd 1 ]  ;; hatch an offspring and move it forward 1 step
   ]
 end
 
-to catch-sheep  ;; wolf procedure
-  let prey one-of sheep-here                    ;; grab a random sheep
+to catch-m1a1s  ;; t72s procedure
+  let prey one-of m1a1s-here                    ;; grab a random m1a1s
   if prey != nobody                             ;; did we get one?  if so,
     [ ask prey [ die ]                          ;; kill it
-      set energy energy + wolf-gain-from-food ] ;; get energy from eating
+      set energy energy + t72s-gain-from-food ] ;; get energy from eating
 end
 
 to death  ;; turtle procedure
@@ -78,31 +123,31 @@ end
 to display-labels
   ask turtles [ set label "" ]
   if show-energy? [
-    ask wolves [ set label round energy ]
+    ask t72s [ set label round energy ]
   ]
 end
 
-to setup-aggregate
-  set-current-plot "populations"
-  clear-plot
-  ;; call procedure generated by aggregate modeler
-  system-dynamics-setup
-  system-dynamics-do-plot
-end
+;;to setup-aggregate
+;;  set-current-plot "populations"
+;;  clear-plot
+;;  ;; call procedure generated by aggregate modeler
+;;  system-dynamics-setup
+;;  system-dynamics-do-plot
+;;end
 
-to step-aggregate
-  ;; each agent tick is DT=1
-  repeat ( 1 / dt ) [ system-dynamics-go ]
-end
+;;to step-aggregate
+;;  ;; each agent tick is DT=1
+;;  repeat ( 1 / dt ) [ system-dynamics-go ]
+;;end
 
-to compare
-  go
-  step-aggregate
-  set-current-plot "populations"
-  system-dynamics-do-plot
-  update-plots
-  display-labels
-end
+;;to compare
+;;  go
+;;  step-aggregate
+;; set-current-plot "populations"
+;;  system-dynamics-do-plot
+;; update-plots
+;;  display-labels
+;;end
 
 
 ; Copyright 2005 Uri Wilensky.
@@ -140,8 +185,8 @@ SLIDER
 100
 177
 133
-initial-number-sheep
-initial-number-sheep
+initial-number-m1a1s
+initial-number-m1a1s
 0.0
 250.0
 148
@@ -153,10 +198,10 @@ HORIZONTAL
 SLIDER
 3
 135
-177
+185
 168
-sheep-max-initial-energy
-sheep-max-initial-energy
+m1a1s-max-initial-energy
+m1a1s-max-initial-energy
 0.0
 50.0
 4
@@ -170,8 +215,8 @@ SLIDER
 172
 177
 205
-sheep-reproduce
-sheep-reproduce
+m1a1s-reproduce
+m1a1s-reproduce
 1.0
 20.0
 4
@@ -185,8 +230,8 @@ SLIDER
 100
 346
 133
-initial-number-wolves
-initial-number-wolves
+initial-number-t72s
+initial-number-t72s
 0.0
 250.0
 30
@@ -200,8 +245,8 @@ SLIDER
 136
 346
 169
-wolf-gain-from-food
-wolf-gain-from-food
+t72s-gain-from-food
+t72s-gain-from-food
 0.0
 100.0
 13
@@ -215,8 +260,8 @@ SLIDER
 172
 346
 205
-wolf-reproduce
-wolf-reproduce
+t72s-reproduce
+t72s-reproduce
 0.0
 20.0
 5
