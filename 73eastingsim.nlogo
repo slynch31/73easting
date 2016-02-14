@@ -46,22 +46,15 @@ turtles-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s hav
 
 to setup
   clear-all
-  ;;initial-number-m1a1s 9 ;;define 9 initial M1A1s
-  ;;initial-number-t72s 17 ;; define 17 initial T-72s
   ask patches [ set pcolor brown ]
-
-  ;;set-default-shape m1a1 "cow"  ;; make m1a1 cows
-
-  ;;set-default-shape t72 "fish"  ;; make t72 fish
   setup-m1a1s   ;; create the m1a1s, then initialize their variables
   setup-t72s ;; create the t72s, then initialize their variables
-;;  display-labels
   reset-ticks
 end
 
 to setup-m1a1s
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
-  create-m1a1s 9 [set color white set size 5 setxy random-xcor random-ycor ]
+  create-m1a1s 9 [set color white set size 5 setxy random-xcor random-ycor set heading 90]
 end
 
 
@@ -151,10 +144,10 @@ end
 GRAPHICS-WINDOW
 350
 10
-1370
-1051
-50
-50
+870
+551
+25
+25
 10.0
 1
 14
@@ -165,10 +158,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--50
-50
--50
-50
+-25
+25
+-25
+25
 0
 0
 1
@@ -512,8 +505,8 @@ Line -7500403 true 150 0 150 150
 m1a1
 true
 1
-Rectangle -13345367 true false 60 90 225 210
-Rectangle -13345367 true false 225 135 285 165
+Rectangle -13345367 true false 90 75 210 240
+Rectangle -13345367 true false 135 15 165 75
 
 pentagon
 false
@@ -569,8 +562,8 @@ Polygon -7500403 true true 151 1 185 108 298 108 207 175 242 282 151 216 59 282 
 t72
 true
 1
-Rectangle -2674135 true true 60 90 225 210
-Rectangle -2674135 true true 225 135 285 165
+Rectangle -2674135 true true 90 75 210 240
+Rectangle -2674135 true true 135 15 165 75
 
 target
 false
