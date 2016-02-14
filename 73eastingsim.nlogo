@@ -49,23 +49,23 @@ to setup
   ;;initial-number-m1a1s 9 ;;define 9 initial M1A1s
   ;;initial-number-t72s 17 ;; define 17 initial T-72s
   ask patches [ set pcolor brown ]
-  set-default-shape m1a1s "cow" ;; make m1a1s cows
+  set-default-shape m1a1s "m1a1" ;; make m1a1s cows
   ;;set-default-shape m1a1 "cow"  ;; make m1a1 cows
-  set-default-shape t72s "fish" ;; make t72s fish
+  set-default-shape t72s "t72" ;; make t72s fish
   ;;set-default-shape t72 "fish"  ;; make t72 fish
   create-m1a1s 9  ;; create the m1a1s, then initialize their variables
   [
     set color white
-    set size 1.5  ;; easier to see
+    set size 5  ;; easier to see
     set label-color blue - 2
-    set energy 1 + random m1a1s-max-initial-energy
+    ;;set energy 1 + random m1a1s-max-initial-energy
     setxy random-xcor random-ycor
   ]
   create-t72s 17 ;; create the t72s, then initialize their variables
   [
-    set color black
-    set size 1.5  ;; easier to see
-    set energy random (2 * t72s-gain-from-food)
+    set color red
+    set size 5  ;; easier to see
+    ;;set energy random (2 * t72s-gain-from-food)
     setxy random-xcor random-ycor
   ]
 ;;  display-labels
@@ -83,7 +83,7 @@ to go
   ask t72s
   [
     move
-    set energy energy - 1  ;; t72s lose energy as they move
+    ;;set energy energy - 1  ;; t72s lose energy as they move
     ;;catch-m1a1s
     death
     ;;reproduce-t72s
@@ -104,15 +104,15 @@ end
 ;;  ]
 ;;end
 
-to catch-m1a1s  ;; t72s procedure
-  let prey one-of m1a1s-here                    ;; grab a random m1a1s
-  if prey != nobody                             ;; did we get one?  if so,
-    [ ask prey [ die ]                          ;; kill it
-      set energy energy + t72s-gain-from-food ] ;; get energy from eating
-end
+;;to catch-m1a1s  ;; t72s procedure
+;;  let prey one-of m1a1s-here                    ;; grab a random m1a1s
+;;  if prey != nobody                             ;; did we get one?  if so,
+;;    [ ask prey [ die ]                          ;; kill it
+;;      set energy energy + t72s-gain-from-food ] ;; get energy from eating
+;;end
 
 to death  ;; turtle procedure
-  ;; when energy dips below zero, die
+  ;;when energy dips below zero, die
   if energy < 0 [ die ]
 end
 
@@ -152,11 +152,11 @@ end
 GRAPHICS-WINDOW
 350
 10
-729
-410
-20
-20
-9.0
+1370
+1051
+50
+50
+10.0
 1
 14
 1
@@ -166,180 +166,15 @@ GRAPHICS-WINDOW
 1
 1
 1
--20
-20
--20
-20
-1
-1
+-50
+50
+-50
+50
+0
+0
 1
 ticks
 30.0
-
-SLIDER
-3
-100
-177
-133
-initial-number-m1a1s
-initial-number-m1a1s
-0.0
-250.0
-148
-1.0
-1
-NIL
-HORIZONTAL
-
-SLIDER
-3
-135
-185
-168
-m1a1s-max-initial-energy
-m1a1s-max-initial-energy
-0.0
-50.0
-4
-1.0
-1
-NIL
-HORIZONTAL
-
-SLIDER
-3
-172
-177
-205
-m1a1s-reproduce
-m1a1s-reproduce
-1.0
-20.0
-4
-1.0
-1
-%
-HORIZONTAL
-
-SLIDER
-181
-100
-346
-133
-initial-number-t72s
-initial-number-t72s
-0.0
-250.0
-30
-1.0
-1
-NIL
-HORIZONTAL
-
-SLIDER
-181
-136
-346
-169
-t72s-gain-from-food
-t72s-gain-from-food
-0.0
-100.0
-13
-1.0
-1
-NIL
-HORIZONTAL
-
-SLIDER
-181
-172
-346
-205
-t72s-reproduce
-t72s-reproduce
-0.0
-20.0
-5
-1.0
-1
-%
-HORIZONTAL
-
-BUTTON
-10
-38
-79
-71
-setup
-setup
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-92
-38
-159
-71
-go
-go\ntick\ndisplay-labels\n
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-PLOT
-8
-269
-317
-466
-agent-populations
-time
-pop.
-0.0
-100.0
-0.0
-100.0
-true
-true
-"" ""
-PENS
-"sheep" 1.0 0 -13345367 true "" "plot count sheep"
-"wolves" 1.0 0 -2674135 true "" "plot count wolves"
-
-MONITOR
-67
-220
-149
-265
-sheep
-count sheep
-3
-1
-11
-
-MONITOR
-151
-220
-233
-265
-wolves
-count wolves
-3
-1
-11
 
 TEXTBOX
 8
@@ -361,265 +196,12 @@ Wolf settings
 0.0
 0
 
-SWITCH
-169
-38
-305
-71
-show-energy?
-show-energy?
-1
-1
--1000
-
-PLOT
-759
-271
-1068
-469
-populations
-time
-pop.
-0.0
-100.0
-0.0
-100.0
-true
-true
-"" ""
-PENS
-"wolfStock" 1.0 0 -2674135 true "" ""
-"sheepStock" 1.0 0 -13345367 true "" ""
-
-BUTTON
-759
-77
-920
-110
-step
-system-dynamics-go\nsystem-dynamics-do-plot
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-MONITOR
-762
-217
-856
-262
-NIL
-sheepStock
-3
-1
-11
-
-MONITOR
-876
-218
-957
-263
-NIL
-wolfStock
-3
-1
-11
-
-BUTTON
-511
-484
-645
-517
-Step Compare
-compare
-NIL
-1
-T
-OBSERVER
-NIL
-N
-NIL
-NIL
-1
-
-BUTTON
-758
-33
-901
-66
-setup
-setup-aggregate
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-SLIDER
-917
-123
-1067
-156
-predationRate
-predationRate
-0.0
-0.1
-3.0E-4
-1.0E-4
-1
-NIL
-HORIZONTAL
-
-SLIDER
-757
-123
-909
-156
-predatorEfficiency
-predatorEfficiency
-0.0
-10.0
-3.3
-0.1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-763
-171
-949
-204
-wolves-death-rate
-wolves-death-rate
-0.0
-1.0
-0.15
-0.01
-1
-NIL
-HORIZONTAL
-
-BUTTON
-915
-33
-1050
-66
-go
-system-dynamics-go\nset-current-plot \"populations\"\nsystem-dynamics-do-plot
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-MONITOR
-902
-496
-1043
-541
-NIL
-sheep-deaths
-3
-1
-11
-
-MONITOR
-753
-497
-894
-542
-NIL
-sheep-births
-3
-1
-11
-
-MONITOR
-754
-553
-884
-598
-NIL
-wolves-births
-3
-1
-11
-
-MONITOR
-892
-553
-1035
-598
-wolves-deaths
-wolves-deaths
-3
-1
-11
-
-BUTTON
-402
-483
-495
-516
-Compare
-compare
-T
-1
-T
-OBSERVER
-NIL
-C
-NIL
-NIL
-1
-
-BUTTON
-458
-441
-610
-474
-Setup Comparison
-setup\nsetup-aggregate
-NIL
-1
-T
-OBSERVER
-NIL
-S
-NIL
-NIL
-1
-
 TEXTBOX
 104
 10
 254
 28
 Agent Model
-11
-0.0
-0
-
-TEXTBOX
-868
-10
-1018
-28
-Aggregate Model
 11
 0.0
 0
@@ -633,6 +215,51 @@ Compare Agent/Aggregate Models\n
 11
 0.0
 0
+
+BUTTON
+38
+35
+101
+68
+setup
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+118
+49
+181
+82
+NIL
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+MONITOR
+171
+295
+228
+340
+NIL
+m1a1s
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -883,6 +510,12 @@ true
 0
 Line -7500403 true 150 0 150 150
 
+m1a1
+true
+1
+Rectangle -13345367 true false 60 90 225 210
+Rectangle -13345367 true false 225 135 285 165
+
 pentagon
 false
 0
@@ -915,7 +548,7 @@ false
 Rectangle -1 true true 166 225 195 285
 Rectangle -1 true true 62 225 90 285
 Rectangle -1 true true 30 75 210 225
-Circle -1 true true 135 75 150
+Circle -1 true true 135 -30 150
 Circle -7500403 true false 180 76 116
 
 square
@@ -933,6 +566,12 @@ star
 false
 0
 Polygon -7500403 true true 151 1 185 108 298 108 207 175 242 282 151 216 59 282 94 175 3 108 116 108
+
+t72
+true
+1
+Rectangle -2674135 true true 60 90 225 210
+Rectangle -2674135 true true 225 135 285 165
 
 target
 false
@@ -1034,76 +673,8 @@ setup-aggregate
 repeat 75 [ go step-aggregate ]
 @#$#@#$#@
 0.001
-    org.nlogo.sdm.gui.AggregateDrawing 25
-        org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 175 270 100 60 40
-            org.nlogo.sdm.gui.WrappedStock "sheepStock" "initial-number-sheep ;; taken from agent model's slider" 1
-        org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 175 352 246 60 40
-            org.nlogo.sdm.gui.WrappedStock "wolfStock" "initial-number-wolves ;; taken from agent model's slider" 0
+    org.nlogo.sdm.gui.AggregateDrawing 1
         org.nlogo.sdm.gui.ReservoirFigure "attributes" "attributes" 1 "FillColor" "Color" 192 192 192 15 105 30 30
-        org.nlogo.sdm.gui.RateConnection 3 45 120 151 120 258 120 NULL NULL 0 0 0
-            org.jhotdraw.figures.ChopEllipseConnector REF 5
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.nlogo.sdm.gui.WrappedRate "sheepStock * sheep-birth-rate" "sheep-births"
-                org.nlogo.sdm.gui.WrappedReservoir  REF 2 0
-        org.nlogo.sdm.gui.RateConnection 3 342 120 443 120 544 120 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.jhotdraw.figures.ChopEllipseConnector
-                org.nlogo.sdm.gui.ReservoirFigure "attributes" "attributes" 1 "FillColor" "Color" 192 192 192 543 105 30 30
-            org.nlogo.sdm.gui.WrappedRate "sheepStock * ( predation-rate * wolfStock )" "sheep-deaths" REF 2
-                org.nlogo.sdm.gui.WrappedReservoir  0   REF 14
-        org.nlogo.sdm.gui.ReservoirFigure "attributes" "attributes" 1 "FillColor" "Color" 192 192 192 47 251 30 30
-        org.nlogo.sdm.gui.RateConnection 3 77 266 208 266 340 266 NULL NULL 0 0 0
-            org.jhotdraw.figures.ChopEllipseConnector REF 17
-            org.jhotdraw.standard.ChopBoxConnector REF 3
-            org.nlogo.sdm.gui.WrappedRate "wolfStock * ( predation-rate * predator-efficiency ) * sheepStock" "wolves-births"
-                org.nlogo.sdm.gui.WrappedReservoir  REF 4 0
-        org.nlogo.sdm.gui.RateConnection 3 424 265 489 264 554 264 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 3
-            org.jhotdraw.figures.ChopEllipseConnector
-                org.nlogo.sdm.gui.ReservoirFigure "attributes" "attributes" 1 "FillColor" "Color" 192 192 192 553 249 30 30
-            org.nlogo.sdm.gui.WrappedRate "wolfStock * predator-death-rate" "wolves-deaths" REF 4
-                org.nlogo.sdm.gui.WrappedReservoir  0   REF 26
-        org.nlogo.sdm.gui.ConverterFigure "attributes" "attributes" 1 "FillColor" "Color" 120 188 182 287 176 50 50
-            org.nlogo.sdm.gui.WrappedConverter "predationRate" "predation-rate"
-        org.nlogo.sdm.gui.ConverterFigure "attributes" "attributes" 1 "FillColor" "Color" 120 188 182 83 175 50 50
-            org.nlogo.sdm.gui.WrappedConverter "predatorEfficiency" "predator-efficiency"
-        org.nlogo.sdm.gui.ConverterFigure "attributes" "attributes" 1 "FillColor" "Color" 120 188 182 427 178 50 50
-            org.nlogo.sdm.gui.WrappedConverter "wolves-death-rate" "predator-death-rate"
-        org.nlogo.sdm.gui.ConverterFigure "attributes" "attributes" 1 "FillColor" "Color" 120 188 182 198 21 50 50
-            org.nlogo.sdm.gui.WrappedConverter ";; convert from agent's percentage\n;; representation to decimal\nsheep-reproduce / 100" "sheep-birth-rate"
-        org.nlogo.sdm.gui.BindingConnection 2 210 58 151 120 NULL NULL 0 0 0
-            org.jhotdraw.contrib.ChopDiamondConnector REF 35
-            org.nlogo.sdm.gui.ChopRateConnector REF 6
-        org.nlogo.sdm.gui.BindingConnection 2 258 120 151 120 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.nlogo.sdm.gui.ChopRateConnector REF 6
-        org.nlogo.sdm.gui.BindingConnection 2 123 209 208 266 NULL NULL 0 0 0
-            org.jhotdraw.contrib.ChopDiamondConnector REF 31
-            org.nlogo.sdm.gui.ChopRateConnector REF 18
-        org.nlogo.sdm.gui.BindingConnection 2 327 191 443 120 NULL NULL 0 0 0
-            org.jhotdraw.contrib.ChopDiamondConnector REF 29
-            org.nlogo.sdm.gui.ChopRateConnector REF 11
-        org.nlogo.sdm.gui.BindingConnection 2 342 120 443 120 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.nlogo.sdm.gui.ChopRateConnector REF 11
-        org.nlogo.sdm.gui.BindingConnection 2 395 234 443 120 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 3
-            org.nlogo.sdm.gui.ChopRateConnector REF 11
-        org.nlogo.sdm.gui.BindingConnection 2 461 218 489 264 NULL NULL 0 0 0
-            org.jhotdraw.contrib.ChopDiamondConnector REF 33
-            org.nlogo.sdm.gui.ChopRateConnector REF 23
-        org.nlogo.sdm.gui.BindingConnection 2 340 266 208 266 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 3
-            org.nlogo.sdm.gui.ChopRateConnector REF 18
-        org.nlogo.sdm.gui.BindingConnection 2 296 210 208 266 NULL NULL 0 0 0
-            org.jhotdraw.contrib.ChopDiamondConnector REF 29
-            org.nlogo.sdm.gui.ChopRateConnector REF 18
-        org.nlogo.sdm.gui.BindingConnection 2 424 265 489 264 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 3
-            org.nlogo.sdm.gui.ChopRateConnector REF 23
-        org.nlogo.sdm.gui.BindingConnection 2 279 152 208 266 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.nlogo.sdm.gui.ChopRateConnector REF 18
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
