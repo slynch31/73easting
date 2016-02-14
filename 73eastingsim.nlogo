@@ -53,7 +53,7 @@ to setup
   ;;set-default-shape m1a1 "cow"  ;; make m1a1 cows
   set-default-shape t72s "fish" ;; make t72s fish
   ;;set-default-shape t72 "fish"  ;; make t72 fish
-  create-m1a1s initial-number-m1a1s  ;; create the m1a1s, then initialize their variables
+  create-m1a1s 9  ;; create the m1a1s, then initialize their variables
   [
     set color white
     set size 1.5  ;; easier to see
@@ -61,30 +61,32 @@ to setup
     set energy 1 + random m1a1s-max-initial-energy
     setxy random-xcor random-ycor
   ]
-  create-t72s initial-number-t72s  ;; create the t72s, then initialize their variables
+  create-t72s 17 ;; create the t72s, then initialize their variables
   [
     set color black
     set size 1.5  ;; easier to see
     set energy random (2 * t72s-gain-from-food)
     setxy random-xcor random-ycor
   ]
-  display-labels
+;;  display-labels
   reset-ticks
 end
 
 to go
-  if not any? turtles [ stop ]
-  ask m1a1s [
+  ;;if not any? turtles [ stop ]
+  ask m1a1s
+  [
     move
     death
-    reproduce-m1a1s
+    ;;reproduce-m1a1s
   ]
-  ask t72s [
+  ask t72s
+  [
     move
     set energy energy - 1  ;; t72s lose energy as they move
-    catch-m1a1s
+    ;;catch-m1a1s
     death
-    reproduce-t72s
+    ;;reproduce-t72s
   ]
 end
 
@@ -94,19 +96,13 @@ to move  ;; turtle procedure
   fd 1
 end
 
-to reproduce-m1a1s  ;; m1a1s procedure
-  if random-float 100 < m1a1s-reproduce [  ;; throw "dice" to see if you will reproduce
-    set energy (energy / 2)                ;; divide energy between parent and offspring
-    hatch 1 [ rt random-float 360 fd 1 ]   ;; hatch an offspring and move it forward 1 step
-  ]
-end
 
-to reproduce-t72s  ;; t72s procedure
-  if random-float 100 < t72s-reproduce [  ;; throw "dice" to see if you will reproduce
-    set energy (energy / 2)               ;; divide energy between parent and offspring
-    hatch 1 [ rt random-float 360 fd 1 ]  ;; hatch an offspring and move it forward 1 step
-  ]
-end
+;;to reproduce-t72s  ;; t72s procedure
+;;  if random-float 100 < t72s-reproduce [  ;; throw "dice" to see if you will reproduce
+;;   set energy (energy / 2)               ;; divide energy between parent and offspring
+;;    hatch 1 [ rt random-float 360 fd 1 ]  ;; hatch an offspring and move it forward 1 step
+;;  ]
+;;end
 
 to catch-m1a1s  ;; t72s procedure
   let prey one-of m1a1s-here                    ;; grab a random m1a1s
@@ -120,12 +116,12 @@ to death  ;; turtle procedure
   if energy < 0 [ die ]
 end
 
-to display-labels
-  ask turtles [ set label "" ]
-  if show-energy? [
-    ask t72s [ set label round energy ]
-  ]
-end
+;;to display-labels
+;;  ask turtles [ set label "" ]
+;;  if show-energy? [
+;;    ask t72s [ set label round energy ]
+;;  ]
+;;end
 
 ;;to setup-aggregate
 ;;  set-current-plot "populations"
@@ -492,7 +488,7 @@ predatorEfficiency
 predatorEfficiency
 0.0
 10.0
-1
+3.3
 0.1
 1
 NIL
