@@ -49,28 +49,27 @@ to setup
   ;;initial-number-m1a1s 9 ;;define 9 initial M1A1s
   ;;initial-number-t72s 17 ;; define 17 initial T-72s
   ask patches [ set pcolor brown ]
-  set-default-shape m1a1s "m1a1" ;; make m1a1s cows
+
   ;;set-default-shape m1a1 "cow"  ;; make m1a1 cows
-  set-default-shape t72s "t72" ;; make t72s fish
+
   ;;set-default-shape t72 "fish"  ;; make t72 fish
-  create-m1a1s 9  ;; create the m1a1s, then initialize their variables
-  [
-    set color white
-    set size 5  ;; easier to see
-    set label-color blue - 2
-    ;;set energy 1 + random m1a1s-max-initial-energy
-    setxy random-xcor random-ycor
-  ]
-  create-t72s 17 ;; create the t72s, then initialize their variables
-  [
-    set color red
-    set size 5  ;; easier to see
-    ;;set energy random (2 * t72s-gain-from-food)
-    setxy random-xcor random-ycor
-  ]
+  setup-m1a1s   ;; create the m1a1s, then initialize their variables
+  setup-t72s ;; create the t72s, then initialize their variables
 ;;  display-labels
   reset-ticks
 end
+
+to setup-m1a1s
+  set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
+  create-m1a1s 9 [set color white set size 5 setxy random-xcor random-ycor ]
+end
+
+
+to setup-t72s
+  set-default-shape t72s "t72" ;; make t72s their own shape
+  create-t72s 17 [set color red set size 5 setxy random-xcor random-ycor]
+end
+
 
 to go
   ;;if not any? turtles [ stop ]
@@ -113,7 +112,7 @@ end
 
 to death  ;; turtle procedure
   ;;when energy dips below zero, die
-  if energy < 0 [ die ]
+  if hp < 0 [ die ]
 end
 
 ;;to display-labels
