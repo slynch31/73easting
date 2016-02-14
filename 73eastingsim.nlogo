@@ -54,15 +54,35 @@ end
 
 to setup-m1a1s
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
-  create-m1a1s 9 [set color white set size 5 setxy random-xcor random-ycor set heading 90]
+  create-m1a1s initial-number-m1a1 [set color white set size 5 setxy 1 1 set heading 90]
+  ask m1a1 0 [setxy lead_m1a1_x_cor lead_m1a1_y_cor]
+  ask m1a1 1 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - 5]
+  ask m1a1 2 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + 5]
+  ask m1a1 3 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - 10]
+  ask m1a1 4 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + 10]
+  ask m1a1 5 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - 15]
+  ask m1a1 6 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + 15]
+  ask m1a1 7 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - 20]
+  ask m1a1 8 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + 20]
 end
 
 
 to setup-t72s
   set-default-shape t72s "t72" ;; make t72s their own shape
-  create-t72s 17 [set color red set size 5 setxy random-xcor random-ycor]
+  create-t72s initial-number-t72 [set color red set size 5 setxy 1 1 set heading 270]
+  ;ask t72 0 [setxy lead_t72_x_cor lead_t72_y_cor]
+  ask t72 0 [setxy lead_t72_x_cor lead_t72_y_cor]
+  ask t72 1 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor - 5]
+  ask t72 2 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor + 5]
+  ask t72 3 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor - 10]
+  ask t72 4 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor + 10]
+  ask t72 5 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor - 15]
+  ask t72 6 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor + 15]
+  ask t72 7 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor - 20]
+  ask t72 8 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor + 20]
 end
 
+; use layout-circle to arraange the T-72s at some point
 
 to go
   ;;if not any? turtles [ stop ]
@@ -144,10 +164,10 @@ end
 GRAPHICS-WINDOW
 350
 10
-870
-551
-25
-25
+1070
+751
+35
+35
 10.0
 1
 14
@@ -158,10 +178,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--25
-25
--25
-25
+-35
+35
+-35
+35
 0
 0
 1
@@ -194,16 +214,6 @@ TEXTBOX
 254
 28
 Agent Model
-11
-0.0
-0
-
-TEXTBOX
-434
-417
-658
-435
-Compare Agent/Aggregate Models\n
 11
 0.0
 0
@@ -242,16 +252,95 @@ NIL
 NIL
 1
 
-MONITOR
-171
-295
-228
-340
-NIL
-m1a1s
+SLIDER
+5
+129
+194
+162
+initial-number-m1a1
+initial-number-m1a1
+0
+50
+9
+1
+1
+m1a1
+HORIZONTAL
+
+SLIDER
+3
+169
+175
+202
+initial-number-t72
+initial-number-t72
+0
+50
 17
 1
-11
+1
+t72
+HORIZONTAL
+
+SLIDER
+3
+216
+175
+249
+lead_m1a1_x_cor
+lead_m1a1_x_cor
+min-pxcor
+max-pxcor
+-20
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+3
+257
+175
+290
+lead_m1a1_y_cor
+lead_m1a1_y_cor
+min-pycor
+max-pycor
+0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+3
+295
+175
+328
+lead_t72_x_cor
+lead_t72_x_cor
+min-pxcor
+max-pxcor
+20
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1
+338
+173
+371
+lead_t72_y_cor
+lead_t72_y_cor
+min-pycor
+max-pycor
+0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -680,6 +769,16 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
+
+m1a1_spawn
+0.0
+-0.2 0 0.0 1.0
+0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+Line -7500403 true 45 150 240 150
 
 @#$#@#$#@
 0
