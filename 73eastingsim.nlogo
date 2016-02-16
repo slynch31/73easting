@@ -53,12 +53,17 @@ to setup
 end
 
 to setup-m1a1s
-  let current-m1a1s 0 ;;initialize counter
+  let current-m1a1s 1 ;;initialize counter
   ;;initailize loop and let it: create n-1 number of m1a1s with size 5, color blue, facing EAST and in a line
-  while [current-m1a1s < initial-number-m1a1]
-  [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 * current-m1a1s lead_m1a1_y_cor - 5 * current-m1a1s set heading 90 ]
+  while [current-m1a1s <= (initial-number-m1a1 / 2)]
+  [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 ]
+    create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + ((5 * current-m1a1s)) set heading 90 ]
     set current-m1a1s current-m1a1s + 1
   ]
+  ;;create the LEAD m1a1
+  ;;create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90]
+  let initial-number-m1a1-mod initial-number-m1a1 - 1
+  if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1 [die] ]
   ;;create the LEAD m1a1
   create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90]
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
@@ -67,7 +72,7 @@ end
 
 to setup-t72s
   set-default-shape t72s "t72" ;; make t72s their own shape
-  create-t72s 8 [set color red set size 5 setxy 1 1 set heading 270]
+  ;;create-t72s 8 [set color red set size 5 setxy 1 1 set heading 270]
 
 end
 
@@ -250,7 +255,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 50
-9
+10
 1
 1
 m1a1
