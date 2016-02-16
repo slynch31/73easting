@@ -54,16 +54,15 @@ end
 
 to setup-m1a1s
   let current-m1a1s 1 ;;initialize counter
-  ;;initailize loop and let it: create n-1 number of m1a1s with size 5, color blue, facing EAST and in a line
+  ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
   while [current-m1a1s <= (initial-number-m1a1 / 2)]
   [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 ]
     create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + ((5 * current-m1a1s)) set heading 90 ]
     set current-m1a1s current-m1a1s + 1
   ]
-  ;;create the LEAD m1a1
-  ;;create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90]
+  ;;if we have an even number of M1A1s we need to make the line accordingly.
   let initial-number-m1a1-mod initial-number-m1a1 - 1
-  if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1 [die] ]
+  if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
   ;;create the LEAD m1a1
   create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90]
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
@@ -71,10 +70,22 @@ end
 
 
 to setup-t72s
+  let current-t72s 1 ;;initialize counter
+  ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
+  while [current-t72s <= (initial-number-t72 / 2)]
+  [ create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 ]
+    create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor + ((5 * current-t72s)) set heading 270 ]
+    set current-t72s current-t72s + 1
+  ]
+  ;;if we have an even number of T72s we need to make the line accordingly.
+  let initial-number-t72-mod initial-number-t72 - 1
+  if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
+  ;;create the front T-72
+  create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270]
   set-default-shape t72s "t72" ;; make t72s their own shape
-  ;;create-t72s 8 [set color red set size 5 setxy 1 1 set heading 270]
-
 end
+
+
 
 ; use layout-circle to arraange the T-72s at some point
 
@@ -158,10 +169,10 @@ end
 GRAPHICS-WINDOW
 350
 10
-1070
-751
-35
-35
+1370
+1051
+50
+50
 10.0
 1
 14
@@ -172,10 +183,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--35
-35
--35
-35
+-50
+50
+-50
+50
 0
 0
 1
@@ -255,7 +266,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 50
-10
+11
 1
 1
 m1a1
