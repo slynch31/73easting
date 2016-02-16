@@ -53,33 +53,22 @@ to setup
 end
 
 to setup-m1a1s
+  let current-m1a1s 0 ;;initialize counter
+  ;;initailize loop and let it: create n-1 number of m1a1s with size 5, color blue, facing EAST and in a line
+  while [current-m1a1s < initial-number-m1a1]
+  [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 * current-m1a1s lead_m1a1_y_cor - 5 * current-m1a1s set heading 90 ]
+    set current-m1a1s current-m1a1s + 1
+  ]
+  ;;create the LEAD m1a1
+  create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90]
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
-  create-m1a1s initial-number-m1a1 [set color white set size 5 setxy 1 1 set heading 90]
-  ask m1a1 0 [setxy lead_m1a1_x_cor lead_m1a1_y_cor]
-  ask m1a1 1 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - 5]
-  ask m1a1 2 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + 5]
-  ask m1a1 3 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - 10]
-  ask m1a1 4 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + 10]
-  ask m1a1 5 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - 15]
-  ask m1a1 6 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + 15]
-  ask m1a1 7 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - 20]
-  ask m1a1 8 [setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + 20]
 end
 
 
 to setup-t72s
   set-default-shape t72s "t72" ;; make t72s their own shape
-  create-t72s initial-number-t72 [set color red set size 5 setxy 1 1 set heading 270]
-  ;ask t72 0 [setxy lead_t72_x_cor lead_t72_y_cor]
-  ask t72 0 [setxy lead_t72_x_cor lead_t72_y_cor]
-  ask t72 1 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor - 5]
-  ask t72 2 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor + 5]
-  ask t72 3 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor - 10]
-  ask t72 4 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor + 10]
-  ask t72 5 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor - 15]
-  ask t72 6 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor + 15]
-  ask t72 7 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor - 20]
-  ask t72 8 [setxy lead_t72_x_cor - 2.5 lead_t72_y_cor + 20]
+  create-t72s 8 [set color red set size 5 setxy 1 1 set heading 270]
+
 end
 
 ; use layout-circle to arraange the T-72s at some point
