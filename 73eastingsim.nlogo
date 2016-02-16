@@ -42,7 +42,7 @@ breed [t72s t72] ;; Iraqi Republican Guard T-72
 ;; breed [M-60s a-M-60] ;; US Army 'old' M-60 Patton Tanks
 ;; breed [IRG_infantrys a-IRG_infantry] ;; US Army Bradley M2A3 IFV
 
-turtles-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have energy
+turtles-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
 
 to setup
   clear-all
@@ -86,7 +86,7 @@ to setup-t72s
 end
 
 
-
+;;TO DO -
 ; use layout-circle to arraange the T-72s at some point
 
 to go
