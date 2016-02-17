@@ -81,7 +81,7 @@ to setup-t72s
   let initial-number-t72-mod initial-number-t72 - 1
   if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
   ;;create the front T-72
-  create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270]
+  create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270]
   set-default-shape t72s "t72" ;; make t72s their own shape
 end
 
@@ -95,21 +95,15 @@ to go
   [
     move
     death
-    ;;reproduce-m1a1s
   ]
   ask t72s
   [
     move
-    ;;set energy energy - 1  ;; t72s lose energy as they move
-    ;;catch-m1a1s
     death
-    ;;reproduce-t72s
   ]
 end
 
 to move  ;; turtle procedure
-  rt random 50
-  lt random 50
   fd 1
 end
 
