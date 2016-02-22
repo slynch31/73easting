@@ -42,17 +42,20 @@ breed [t72s t72] ;; Iraqi Republican Guard T-72
 ;; breed [M-60s a-M-60] ;; US Army 'old' M-60 Patton Tanks
 ;; breed [IRG_infantrys a-IRG_infantry] ;; US Army Bradley M2A3 IFV
 
-turtles-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
+m1a1s-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
+t72s-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
 
 to setup
   clear-all
   ask patches [ set pcolor brown ]
   setup-m1a1s   ;; create the m1a1s, then initialize their variables
   setup-t72s ;; create the t72s, then initialize their variables
+  setup-technology
   reset-ticks
 end
 
 to setup-m1a1s
+  set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
   let current-m1a1s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
   while [current-m1a1s <= (initial-number-m1a1 / 2)]
@@ -65,11 +68,15 @@ to setup-m1a1s
   if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
   ;;create the LEAD m1a1
   create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90]
-  set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
+  ;;set thermal_sights 0
+  ;;set turret_stab 0
+  ;;set gps 0
+
 end
 
 
 to setup-t72s
+  set-default-shape t72s "t72" ;; make t72s their own shape
   let current-t72s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
   while [current-t72s <= (initial-number-t72 / 2)]
@@ -82,8 +89,70 @@ to setup-t72s
   if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
   ;;create the front T-72
   create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270]
-  set-default-shape t72s "t72" ;; make t72s their own shape
+  ;;set thermal_sights 0
+  ;;set turret_stab 0
+  ;;set gps 0
+
 end
+
+to setup-technology
+  ;;in here we'll setup up our technology variables
+  ;; note for all this the point of the model isn't to see if the technology should be IMPROVED at all, it's to see if a
+  ;; tangible difference exists for having the technology in the first place.
+  if M1A1_Thermal_Sights = True  [
+    let i 0
+    while [i < initial-number-m1a1]
+    [
+      ask m1a1s [set thermal_sights 50]
+      set i i + 1
+    ]
+  ]
+    if M1A1_Turret_Stablization = True  [
+    let i 0
+    while [i < initial-number-m1a1]
+    [
+      ask m1a1s [set turret_stab 50]
+      set i i + 1
+    ]
+  ]
+      if M1A1_GPS = True  [
+    let i 0
+    while [i < initial-number-m1a1]
+    [
+      ask m1a1s [set gps 50]
+      set i i + 1
+    ]
+  ]
+      ;;now we do the same thing for the T72s
+      if T72_Thermal_Sights = True  [
+    let i 0
+    while [i < initial-number-t72]
+    [
+      ask t72s [set thermal_sights 50]
+      set i i + 1
+    ]
+  ]
+    if T72_Turret_Stablization = True  [
+    let i 0
+    while [i < initial-number-72]
+    [
+      ask t72s [set turret_stab 50]
+      set i i + 1
+    ]
+  ]
+      if T72_GPS = True  [
+    let i 0
+    while [i < initial-number-t72]
+    [
+      ask t72s [set gps 50]
+      set i i + 1
+    ]
+  ]
+
+
+
+end
+
 
 
 ;;TO DO -
@@ -281,7 +350,7 @@ initial-number-t72
 initial-number-t72
 0
 50
-17
+29
 1
 1
 t72
@@ -347,88 +416,96 @@ max-pycor
 NIL
 HORIZONTAL
 
+SWITCH
+2
+376
+180
+409
+M1A1_Thermal_Sights
+M1A1_Thermal_Sights
+0
+1
+-1000
+
+SWITCH
+1
+415
+206
+448
+M1A1_Turret_Stablization
+M1A1_Turret_Stablization
+1
+1
+-1000
+
+SWITCH
+3
+456
+119
+489
+M1A1_GPS
+M1A1_GPS
+1
+1
+-1000
+
+SWITCH
+224
+377
+391
+410
+T72_Thermal_Sights
+T72_Thermal_Sights
+1
+1
+-1000
+
+SWITCH
+221
+427
+416
+460
+T72_Turret_Stablization
+T72_Turret_Stablization
+1
+1
+-1000
+
+SWITCH
+215
+475
+320
+508
+T72_GPS
+T72_GPS
+1
+1
+-1000
+
 @#$#@#$#@
 ## WHAT IS IT?
 
-This model explores the relationship between two different models of predator-prey ecosystems: an agent-based model and a aggregate model.  Each of the models can be run separately, or docked side-by-side for comparison.
-
-In the agent model, wolves and sheep wander randomly around the landscape, while the wolves look for sheep to prey on. Each step costs the wolves energy, and they must eat sheep in order to replenish their energy - when they run out of energy they die. To allow the population to continue, each wolf or sheep has a fixed probability of reproducing at each time step.
-
-The aggregate model is a System Dynamics model of the relationship between populations our wolves and sheep.  It is based on a version of the famous Lotka-Volterra model of interactions between two species in an ecosystem.
+This is a model of the Battle of 73 Easting during Gulf War I in February 1991.
 
 ## HOW TO USE IT
+Set the position of the lead US Army M1A1 and the lead Iraqi Republican Guard T-72. By default, these positions are indicative of the historic location of the battle.
 
-1. Adjust the slider parameters (see below), or use the default settings.
-3. Press the SETUP-COMPARISON button.
-4. Press the COMPARE button to begin the simulation.
-5. View the POPULATIONS and AGENT-POPULATIONS plots to watch the populations fluctuate over time
-
-Parameters shared between agent and aggregate models:
-- INITIAL-NUMBER-SHEEP: The initial size of sheep population
-- INITIAL-NUMBER-WOLVES: The initial size of wolf population
-- SHEEP-REPRODUCE: The probability of a sheep reproducing at each time step
-
-Parameters for agent model:
-- SHEEP-MAX-INITIAL-ENERGY: At setup time, sheep are given an energy between 1 and this value
-- WOLF-GAIN-FROM-FOOD: The amount of energy wolves get for every sheep eaten
-- WOLF-REPRODUCE: The probability of a wolf reproducing at each time step
-
-Parameters for aggregate model:
-- WOLVES-DEATH-RATE: The rate at which wolves die.
-- PREDATION-RATE: The rate at which wolves eat sheep.
-- PREDATOR-EFFICIENCY: The efficiency of the wolves in extracting energy to reproduce from the prey they eat.
 
 ## THINGS TO NOTICE
 
-Why do you suppose that some variations of the model might be stable while others are not?
 
 ## THINGS TO TRY
 
-Try adjusting the parameters under various settings. How sensitive is the stability of the model to the particular parameters?
 
-Notice that under stable settings, the populations tend to fluctuate at a predictable pace. Can you find any parameters that will speed this up or slow it down?
-
-## EXTENDING THE MODEL
-
-There are a number ways to alter the model so that it will be stable with only wolves and sheep (no grass). Some will require new elements to be coded in or existing behaviors to be changed. Can you develop such a version?
 
 ## NETLOGO FEATURES
 
-Note the use of the System Dynamics Modeler to create the aggregate model.
 
 ## RELATED MODELS
 
-Look at the Wolf Sheep Predation model for an example of an agent model which can produce a stable model of predator-prey ecosystems.
+
 
 ## CREDITS AND REFERENCES
-
-- Lotka, A.J. (1956) Elements of Mathematical Biology.  New York: Dover.
-- Wilensky, U. & Reisman, K. (1999). Connected Science: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. International Journal of Complex Systems, M. 234, pp. 1 - 12. (This model is a slightly extended version of the model described in the paper.)
-- Wilensky, U. & Reisman, K. (in press). Thinking like a Wolf, a Sheep or a Firefly: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. Cognition & Instruction.
-
-## HOW TO CITE
-
-If you mention this model or the NetLogo software in a publication, we ask that you include the citations below.
-
-For the model itself:
-
-* Wilensky, U. (2005).  NetLogo Wolf Sheep Predation (Docked Hybrid) model.  http://ccl.northwestern.edu/netlogo/models/WolfSheepPredation(DockedHybrid).  Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-
-Please cite the NetLogo software as:
-
-* Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-
-## COPYRIGHT AND LICENSE
-
-Copyright 2005 Uri Wilensky.
-
-![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
-
-Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
-
-<!-- 2005 -->
 @#$#@#$#@
 default
 true
