@@ -217,9 +217,9 @@ end
 ; See Info tab for full copyright and license.
 @#$#@#$#@
 GRAPHICS-WINDOW
-350
+347
 10
-1370
+1367
 1051
 50
 50
@@ -316,7 +316,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 50
-11
+9
 1
 1
 m1a1
@@ -331,7 +331,7 @@ initial-number-t72
 initial-number-t72
 0
 50
-29
+17
 1
 1
 t72
@@ -431,10 +431,10 @@ M1A1_GPS
 -1000
 
 SWITCH
-224
-377
-391
-410
+4
+493
+171
+526
 T72_Thermal_Sights
 T72_Thermal_Sights
 1
@@ -442,10 +442,10 @@ T72_Thermal_Sights
 -1000
 
 SWITCH
-221
-427
-416
-460
+6
+531
+201
+564
 T72_Turret_Stablization
 T72_Turret_Stablization
 1
@@ -453,10 +453,10 @@ T72_Turret_Stablization
 -1000
 
 SWITCH
-215
-475
-320
-508
+6
+569
+111
+602
 T72_GPS
 T72_GPS
 1
