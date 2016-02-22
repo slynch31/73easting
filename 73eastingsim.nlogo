@@ -84,7 +84,7 @@ to setup-technology
     let i 0
     while [i < initial-number-m1a1]
     [
-      ask m1a1s [set thermal_sights 1]
+      ask m1a1s [set thermal_sights -1]
       set i i + 1
     ]
   ]
@@ -139,6 +139,7 @@ to go
   ask m1a1s
   [
     move
+    shoot
     death
     ;;reproduce-m1a1s
   ]
@@ -153,12 +154,16 @@ to go
   ]
 end
 
-to move  ;; turtle procedure
-  ;;rt random 50
-  ;;lt random 50
+to move  ;; our M1A1s are going to be moving towards the left
   fd 1
 end
 
+to shoot
+  ;;we'll use a modified version of the empirical formula used on page 36 with data from page 20 incorporating our
+  let m1a1hitrate (0.64 + ( 0.00443299 * turret_stab ) + ( 0.01676 * thermal_sights ) + ( 0.02311 * gps ))
+      ;;use tc vision for thermal sights
+
+end
 
 ;;to reproduce-t72s  ;; t72s procedure
 ;;  if random-float 100 < t72s-reproduce [  ;; throw "dice" to see if you will reproduce
