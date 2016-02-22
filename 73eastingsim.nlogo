@@ -29,6 +29,7 @@ t72s-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have o
 to setup
   clear-all
   ask patches [ set pcolor brown ]
+  ;;set M1A174Easting patch - 30 0
   setup-m1a1s   ;; create the m1a1s, then initialize their variables
   setup-t72s ;; create the t72s, then initialize their variables
   setup-technology
@@ -40,19 +41,18 @@ to setup-m1a1s
   let current-m1a1s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
   while [current-m1a1s <= (initial-number-m1a1 / 2)]
-  [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 ]
-    create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + ((5 * current-m1a1s)) set heading 90 ]
+  [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 set hp 1 ]
+    create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + ((5 * current-m1a1s)) set heading 90 set hp 1 ]
     set current-m1a1s current-m1a1s + 1
   ]
   ;;if we have an even number of M1A1s we need to make the line accordingly.
   let initial-number-m1a1-mod initial-number-m1a1 - 1
   if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
   ;;create the LEAD m1a1
-  create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90]
+  create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90 set hp 1]
   ;;set thermal_sights 0
   ;;set turret_stab 0
   ;;set gps 0
-
 end
 
 
@@ -61,15 +61,15 @@ to setup-t72s
   let current-t72s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
   while [current-t72s <= (initial-number-t72 / 2)]
-  [ create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 ]
-    create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor + ((5 * current-t72s)) set heading 270 ]
+  [ create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 set hp 1]
+    create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor + ((5 * current-t72s)) set heading 270 set hp 1]
     set current-t72s current-t72s + 1
   ]
   ;;if we have an even number of T72s we need to make the line accordingly.
   let initial-number-t72-mod initial-number-t72 - 1
   if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
   ;;create the front T-72
-  create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270]
+  create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
   ;;set thermal_sights 0
   ;;set turret_stab 0
   ;;set gps 0
@@ -129,18 +129,13 @@ to setup-technology
       set i i + 1
     ]
   ]
-
-
-
 end
 
-
-
-;;TO DO -
-; use layout-circle to arraange the T-72s at some point
+;;this ends the setup routine
 
 to go
-  ;;if not any? turtles [ stop ]
+  ;;sanity check and make sure somehow our tanks didn't all destroy each other
+  if not any? turtles [ stop ]
   ask m1a1s
   [
     move
@@ -149,7 +144,8 @@ to go
   ]
   ask t72s
   [
-    move
+    ;;based on historical data the Iraqi Republican Guard tanks didn't move during the battle.
+    ;;move
     ;;set energy energy - 1  ;; t72s lose energy as they move
     ;;catch-m1a1s
     death
@@ -158,8 +154,8 @@ to go
 end
 
 to move  ;; turtle procedure
-  rt random 50
-  lt random 50
+  ;;rt random 50
+  ;;lt random 50
   fd 1
 end
 
