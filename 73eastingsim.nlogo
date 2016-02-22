@@ -27,20 +27,9 @@
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
 
-;; TO-DO figure out how we're going to map elevation...see sand comment below
-globals [sand]  ;; track sand? Possibly make this elevation and have it linearly map onto hit chance?
-;; initialize Iraq IRG and US Army ACR tanks
-;; keep multiples plural, keep singular as 'a-'
+globals [sand]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
-;; breed [t55s a-t55] ;; Iraqi Republican Guard T-55 (possibly more 74 easting?) remove this for right now
-;; we'll go ahead and put in place holders for british tanks, IRG infantry, and US Army M2A3s to add complexity later
-;; although we might not do this after our initial review
-;; breed [challengers a-challenger] ;; British Challenger Tank
-;; breed [m2a3s a-m2a3] ;; US Army Bradley M2A3 IFV
-;; breed [IRG_infantrys a-IRG_infantry] ;; Iraqi Republican Guard Infantry
-;; breed [M-60s a-M-60] ;; US Army 'old' M-60 Patton Tanks
-;; breed [IRG_infantrys a-IRG_infantry] ;; US Army Bradley M2A3 IFV
 
 m1a1s-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
 t72s-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
@@ -134,7 +123,7 @@ to setup-technology
   ]
     if T72_Turret_Stablization = True  [
     let i 0
-    while [i < initial-number-72]
+    while [i < initial-number-t72]
     [
       ask t72s [set turret_stab 50]
       set i i + 1
@@ -434,7 +423,7 @@ SWITCH
 448
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -445,7 +434,7 @@ SWITCH
 489
 M1A1_GPS
 M1A1_GPS
-1
+0
 1
 -1000
 
