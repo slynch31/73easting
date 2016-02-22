@@ -1,16 +1,8 @@
 ;;INTA 4742/6742 CX4232 CSE6742
 ;;Spring 2016
-;;==================NOTES==================
-;; 10 Feb 2016
-;; =========Group Discussion=========
-;; model - training, IRG defenses,
-;; long tan battle reading? possibly use this as a basis for simulation and modeling
-;; potentially model as a 'size of tank' quantity? cross section of tank? tank speed
-;; Geography
-;; what makes a tank a tank? Techincal mismatch between US and IRG, and decisions made by each army are good fodder
-;; 3000m effective range on the M1A1
+;;==================NOTES===================
 ;; =========Instructor Comments=========
-;; be careful of to oman variables
+;; be careful of too many variables
 ;; IRG defensive? How would those have had a tangiable effect on the outcome of the battle? ONe thing we want to think about when we're doing more recent battles
 ;; is as technically gets more advanced, communciations technology has a bigger role in the battles. that's one of the challenges for one of the more modern battles.
 ;; If we have other data and examples to talk about, this is more data and motivation for what we should model and we should try to compare and contrast what we have.
@@ -92,7 +84,7 @@ to setup-technology
     let i 0
     while [i < initial-number-m1a1]
     [
-      ask m1a1s [set thermal_sights 50]
+      ask m1a1s [set thermal_sights 1]
       set i i + 1
     ]
   ]
@@ -100,7 +92,7 @@ to setup-technology
     let i 0
     while [i < initial-number-m1a1]
     [
-      ask m1a1s [set turret_stab 50]
+      ask m1a1s [set turret_stab 1]
       set i i + 1
     ]
   ]
@@ -108,7 +100,7 @@ to setup-technology
     let i 0
     while [i < initial-number-m1a1]
     [
-      ask m1a1s [set gps 50]
+      ask m1a1s [set gps 1]
       set i i + 1
     ]
   ]
@@ -117,7 +109,7 @@ to setup-technology
     let i 0
     while [i < initial-number-t72]
     [
-      ask t72s [set thermal_sights 50]
+      ask t72s [set thermal_sights 1]
       set i i + 1
     ]
   ]
@@ -125,7 +117,7 @@ to setup-technology
     let i 0
     while [i < initial-number-t72]
     [
-      ask t72s [set turret_stab 50]
+      ask t72s [set turret_stab 1]
       set i i + 1
     ]
   ]
@@ -133,7 +125,7 @@ to setup-technology
     let i 0
     while [i < initial-number-t72]
     [
-      ask t72s [set gps 50]
+      ask t72s [set gps 1]
       set i i + 1
     ]
   ]
