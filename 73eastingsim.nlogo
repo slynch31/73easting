@@ -20,7 +20,7 @@
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
 
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
@@ -33,6 +33,7 @@ to setup
   setup-m1a1s   ;; create the m1a1s, then initialize their variables
   setup-t72s ;; create the t72s, then initialize their variables
   setup-technology
+  setup-desert
   reset-ticks
 end
 
@@ -97,6 +98,13 @@ to setup-technology
   ;; tangible difference exists for having the technology in the first place.
 end
 
+to setup-desert
+  ;;in this function we're going to setup and normalize the desert.
+  ;;entire battle was fought in the span of ~1500 meters, so if we make our entire area 3000 meters, that should be enough maneuvering room.
+  set scale_factor_x 3000 / max-pxcor  ;; this will give us a fraction so we can work with xycor easier
+  set scale_factor_y 3000 / max-pycor  ;;this will give us a fraction so we can work with xycor easier
+end
+
 to go
   ;;sanity check and make sure somehow our tanks didn't all destroy each other
   if not any? turtles [ stop ]
@@ -105,7 +113,6 @@ to go
   ask m1a1s
   [
     move
-    ;;shoot
     death
     ;;reproduce-m1a1s
   ]
@@ -120,8 +127,12 @@ to go
   ]
 end
 
-to move  ;; our M1A1s are going to be moving towards the right
-  fd 1
+to move
+   ;; our M1A1s are going to be moving towards the right
+   ;;first we'll do a GPS check...if the M1A1s have GPS they'll stay together and hopefully engage at all around the same time. if they don't have GPS, then they'll wander.
+   ifelse M1A1_GPS = True
+   [fd 1]
+   [rt (random 4 + random -4) fd 1]
 end
 
 
@@ -207,26 +218,6 @@ ticks
 30.0
 
 TEXTBOX
-8
-80
-148
-99
-Sheep settings
-11
-0.0
-0
-
-TEXTBOX
-186
-80
-299
-98
-Wolf settings
-11
-0.0
-0
-
-TEXTBOX
 104
 10
 254
@@ -254,9 +245,9 @@ NIL
 1
 
 BUTTON
-107
+108
 38
-170
+171
 71
 NIL
 go
@@ -271,9 +262,9 @@ NIL
 1
 
 SLIDER
-5
+6
 129
-194
+195
 162
 initial-number-m1a1
 initial-number-m1a1
@@ -286,9 +277,9 @@ m1a1
 HORIZONTAL
 
 SLIDER
-3
+4
 169
-175
+176
 202
 initial-number-t72
 initial-number-t72
@@ -301,9 +292,9 @@ t72
 HORIZONTAL
 
 SLIDER
-3
+4
 216
-175
+176
 249
 lead_m1a1_x_cor
 lead_m1a1_x_cor
@@ -316,24 +307,24 @@ NIL
 HORIZONTAL
 
 SLIDER
-3
+4
 257
-175
+176
 290
 lead_m1a1_y_cor
 lead_m1a1_y_cor
 min-pycor
 max-pycor
-5
+0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-3
+4
 295
-175
+176
 328
 lead_t72_x_cor
 lead_t72_x_cor
@@ -389,7 +380,7 @@ SWITCH
 489
 M1A1_GPS
 M1A1_GPS
-0
+1
 1
 -1000
 
@@ -400,7 +391,7 @@ SWITCH
 526
 T72_Thermal_Sights
 T72_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -411,7 +402,7 @@ SWITCH
 564
 T72_Turret_Stablization
 T72_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -422,7 +413,7 @@ SWITCH
 602
 T72_GPS
 T72_GPS
-0
+1
 1
 -1000
 
