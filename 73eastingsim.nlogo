@@ -20,17 +20,16 @@
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
 
-globals [sand]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
-m1a1s-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
-t72s-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
+m1a1s-own [hp]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
+t72s-own [hp]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
 
 to setup
   clear-all
   ask patches [ set pcolor brown ]
-  ;;set M1A174Easting patch - 30 0
   setup-m1a1s   ;; create the m1a1s, then initialize their variables
   setup-t72s ;; create the t72s, then initialize their variables
   setup-technology
@@ -50,10 +49,6 @@ to setup-m1a1s
   let initial-number-m1a1-mod initial-number-m1a1 - 1
   if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
   ;;create the LEAD m1a1
-  create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90 set hp 1]
-  ;;set thermal_sights 0
-  ;;set turret_stab 0
-  ;;set gps 0
 end
 
 
@@ -71,76 +66,45 @@ to setup-t72s
   if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
   ;;create the front T-72
   create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
-  ;;set thermal_sights 0
-  ;;set turret_stab 0
-  ;;set gps 0
-
 end
 
 to setup-technology
+  ;;take the booleans and convert into 0 or 1...
+     ifelse M1A1_Turret_Stablization = True
+       [set M1A1turret_stab 1]
+       [set M1A1turret_stab 0]
+      ifelse M1A1_Thermal_Sights = True
+       [set M1A1thermal_sights 1]
+       [set M1A1thermal_sights 0]
+      ifelse M1A1_GPS = True
+       [set M1A1gps 1]
+       [set M1A1gps 0]
+      ifelse T72_Turret_Stablization = True
+       [set T72turret_stab 1]
+       [set T72turret_stab 0]
+      ifelse T72_Thermal_Sights = True
+       [set T72thermal_sights 1]
+       [set T72thermal_sights 0]
+      ifelse T72_GPS = True
+       [set T72gps 1]
+       [set T72gps 0]
+  ;;we'll use a modified version of the empirical formula used on page 36 with data from page 20 incorporating our
+  set m1a1hitrate (0.64 + ( 0.00443299 * M1A1turret_stab ) + ( 0.01676 * M1A1thermal_sights ) + ( 0.02311 * M1A1gps ))
+  set t72hitrate (0.5 + ( 0.00543299 * T72turret_stab ) + (0.00676  * T72thermal_sights ) + (0.01311 * T72gps )) / 2
   ;;in here we'll setup up our technology variables
   ;; note for all this the point of the model isn't to see if the technology should be IMPROVED at all, it's to see if a
   ;; tangible difference exists for having the technology in the first place.
-  if M1A1_Thermal_Sights = True  [
-    let i 0
-    while [i < initial-number-m1a1]
-    [
-      ask m1a1s [set thermal_sights -1]
-      set i i + 1
-    ]
-  ]
-    if M1A1_Turret_Stablization = True  [
-    let i 0
-    while [i < initial-number-m1a1]
-    [
-      ask m1a1s [set turret_stab 1]
-      set i i + 1
-    ]
-  ]
-      if M1A1_GPS = True  [
-    let i 0
-    while [i < initial-number-m1a1]
-    [
-      ask m1a1s [set gps 1]
-      set i i + 1
-    ]
-  ]
-      ;;now we do the same thing for the T72s
-      if T72_Thermal_Sights = True  [
-    let i 0
-    while [i < initial-number-t72]
-    [
-      ask t72s [set thermal_sights 1]
-      set i i + 1
-    ]
-  ]
-    if T72_Turret_Stablization = True  [
-    let i 0
-    while [i < initial-number-t72]
-    [
-      ask t72s [set turret_stab 1]
-      set i i + 1
-    ]
-  ]
-      if T72_GPS = True  [
-    let i 0
-    while [i < initial-number-t72]
-    [
-      ask t72s [set gps 1]
-      set i i + 1
-    ]
-  ]
 end
-
-;;this ends the setup routine
 
 to go
   ;;sanity check and make sure somehow our tanks didn't all destroy each other
   if not any? turtles [ stop ]
+
+
   ask m1a1s
   [
     move
-    shoot
+    ;;shoot
     death
     ;;reproduce-m1a1s
   ]
@@ -155,16 +119,11 @@ to go
   ]
 end
 
-to move  ;; our M1A1s are going to be moving towards the left
+to move  ;; our M1A1s are going to be moving towards the right
   fd 1
 end
 
-to shoot
-  ;;we'll use a modified version of the empirical formula used on page 36 with data from page 20 incorporating our
-  let m1a1hitrate (0.64 + ( 0.00443299 * turret_stab ) + ( 0.01676 * thermal_sights ) + ( 0.02311 * gps ))
-      ;;use tc vision for thermal sights
 
-end
 
 ;;to reproduce-t72s  ;; t72s procedure
 ;;  if random-float 100 < t72s-reproduce [  ;; throw "dice" to see if you will reproduce
@@ -293,10 +252,10 @@ NIL
 1
 
 BUTTON
-118
-49
-181
-82
+107
+38
+170
+71
 NIL
 go
 T
@@ -406,7 +365,7 @@ SWITCH
 409
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -417,7 +376,7 @@ SWITCH
 448
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -428,7 +387,7 @@ SWITCH
 489
 M1A1_GPS
 M1A1_GPS
-0
+1
 1
 -1000
 
@@ -464,6 +423,28 @@ T72_GPS
 1
 1
 -1000
+
+MONITOR
+220
+383
+300
+428
+NIL
+m1a1hitrate
+17
+1
+11
+
+MONITOR
+221
+498
+290
+543
+NIL
+t72hitrate
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
