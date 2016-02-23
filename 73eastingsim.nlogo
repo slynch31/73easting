@@ -145,7 +145,7 @@ to m1a1engage
   let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range
   create-links-to m1a1targets [set color blue] ;;show what units the M1A1s are engaging
-  set m1a1_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
+  set m1a1_shot random-normal 0.5 (0.5 / 3) ;;have a randomly distributed normal variable with a mean of 0.5 and having 99.7% of values fall between 0 and 1.
   if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
   [ask m1a1targets [set hp hp - 1]]
 
@@ -157,7 +157,7 @@ to t72engage
   let t72max_engagement_range t72thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
   create-links-to t72targets [set color red]
-  set t72_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
+  set t72_shot random-normal 0.5 (0.5 / 3) ;;have a randomly distributed normal variable with a mean of 0.5 and having 99.7% of values fall between 0 and 1.
   if t72_shot <= t72hitrate ;;check this random number against our hit probability...
   [ask t72targets [set hp hp - 1]]
   ;print [hp] of t72targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
@@ -386,7 +386,7 @@ SWITCH
 409
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -397,7 +397,7 @@ SWITCH
 487
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -408,7 +408,7 @@ SWITCH
 524
 M1A1_GPS
 M1A1_GPS
-0
+1
 1
 -1000
 
@@ -419,7 +419,7 @@ SWITCH
 560
 T72_Thermal_Sights
 T72_Thermal_Sights
-1
+0
 1
 -1000
 
