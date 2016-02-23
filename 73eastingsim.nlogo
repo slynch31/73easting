@@ -1,16 +1,9 @@
 ;;INTA 4742/6742 CX4232 CSE6742
+;;
 ;;Spring 2016
-;;==================NOTES==================
-;; 10 Feb 2016
-;; =========Group Discussion=========
-;; model - training, IRG defenses,
-;; long tan battle reading? possibly use this as a basis for simulation and modeling
-;; potentially model as a 'size of tank' quantity? cross section of tank? tank speed
-;; Geography
-;; what makes a tank a tank? Techincal mismatch between US and IRG, and decisions made by each army are good fodder
-;; 3000m effective range on the M1A1
+;;==================NOTES===================
 ;; =========Instructor Comments=========
-;; be careful of to oman variables
+;; be careful of too many variables
 ;; IRG defensive? How would those have had a tangiable effect on the outcome of the battle? ONe thing we want to think about when we're doing more recent battles
 ;; is as technically gets more advanced, communciations technology has a bigger role in the battles. that's one of the challenges for one of the more modern battles.
 ;; If we have other data and examples to talk about, this is more data and motivation for what we should model and we should try to compare and contrast what we have.
@@ -27,85 +20,146 @@
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
 
-;; TO-DO figure out how we're going to map elevation...see sand comment below
-globals [sand]  ;; track sand? Possibly make this elevation and have it linearly map onto hit chance?
-;; initialize Iraq IRG and US Army ACR tanks
-;; keep multiples plural, keep singular as 'a-'
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
-;; breed [t55s a-t55] ;; Iraqi Republican Guard T-55 (possibly more 74 easting?) remove this for right now
-;; we'll go ahead and put in place holders for british tanks, IRG infantry, and US Army M2A3s to add complexity later
-;; although we might not do this after our initial review
-;; breed [challengers a-challenger] ;; British Challenger Tank
-;; breed [m2a3s a-m2a3] ;; US Army Bradley M2A3 IFV
-;; breed [IRG_infantrys a-IRG_infantry] ;; Iraqi Republican Guard Infantry
-;; breed [M-60s a-M-60] ;; US Army 'old' M-60 Patton Tanks
-;; breed [IRG_infantrys a-IRG_infantry] ;; US Army Bradley M2A3 IFV
 
-turtles-own [hp thermal_sights turret_stab gps]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
+m1a1s-own [hp]       ;; both t72s and m1a1s have hit points
+t72s-own [hp]       ;; both t72s and m1a1s have hit points
 
 to setup
   clear-all
   ask patches [ set pcolor brown ]
   setup-m1a1s   ;; create the m1a1s, then initialize their variables
   setup-t72s ;; create the t72s, then initialize their variables
+  setup-technology
+  setup-desert
   reset-ticks
 end
 
 to setup-m1a1s
+  set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
   let current-m1a1s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
   while [current-m1a1s <= (initial-number-m1a1 / 2)]
-  [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 ]
-    create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + ((5 * current-m1a1s)) set heading 90 ]
+  [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 set hp 1 ]
+    create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + ((5 * current-m1a1s)) set heading 90 set hp 1 ]
     set current-m1a1s current-m1a1s + 1
   ]
   ;;if we have an even number of M1A1s we need to make the line accordingly.
   let initial-number-m1a1-mod initial-number-m1a1 - 1
   if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
   ;;create the LEAD m1a1
-  create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90]
-  set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
+  create-m1a1s 1 [set color sky set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90 set hp 1]
 end
 
 
 to setup-t72s
+  set-default-shape t72s "t72" ;; make t72s their own shape
   let current-t72s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
   while [current-t72s <= (initial-number-t72 / 2)]
-  [ create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 ]
-    create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor + ((5 * current-t72s)) set heading 270 ]
+  [ create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 set hp 1]
+    create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor + ((5 * current-t72s)) set heading 270 set hp 1]
     set current-t72s current-t72s + 1
   ]
   ;;if we have an even number of T72s we need to make the line accordingly.
   let initial-number-t72-mod initial-number-t72 - 1
   if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
   ;;create the front T-72
-  create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270]
-  set-default-shape t72s "t72" ;; make t72s their own shape
+  create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
 end
 
+to setup-technology
+  ;;take the booleans and convert into 0 or 1...
+     ifelse M1A1_Turret_Stablization = True
+       [set M1A1turret_stab 1]
+       [set M1A1turret_stab 0]
+      ifelse M1A1_Thermal_Sights = True
+       [set M1A1thermal_sights 1 set M1A1thermal_sights_range 1420] ;;1420 was the engagement ranged afforded to McMaster's M1A1 due to thermal sights from his front line account
+       [set M1A1thermal_sights 0 set M1A1thermal_sights_range 50] ;;assume an engagement range of 50m if we don't have thermal sights
+      ifelse M1A1_GPS = True
+       [set M1A1gps 1]
+       [set M1A1gps 0]
+      ifelse T72_Turret_Stablization = True
+       [set T72turret_stab 1]
+       [set T72turret_stab 0]
+      ifelse T72_Thermal_Sights = True
+       [set T72thermal_sights 1 set T72thermal_sights_range 700] ;;assume the Iraqi version to be 1/2 to 1/3 as good.
+       [set T72thermal_sights 0 set T72thermal_sights_range 50] ;;assume this is all you can see in a sandstorm...is this a good estimate?
+      ifelse T72_GPS = True
+       [set T72gps 1]
+       [set T72gps 0]
+  ;;we'll use a modified version of the empirical formula used on page 36 with data from page 20 incorporating our
+  set m1a1hitrate (0.64 + ( 0.00443299 * M1A1turret_stab ) + ( 0.01676 * M1A1thermal_sights ) + ( 0.02311 * M1A1gps ))
+  set t72hitrate (0.5 + ( 0.00543299 * T72turret_stab ) + (0.00676  * T72thermal_sights ) + (0.01311 * T72gps )) / 2
+  ;;in here we'll setup up our technology variables
+  ;; note for all this the point of the model isn't to see if the technology should be IMPROVED at all, it's to see if a
+  ;; tangible difference exists for having the technology in the first place.
+end
 
-;;TO DO -
-; use layout-circle to arraange the T-72s at some point
+to setup-desert
+  ;;in this function we're going to setup and normalize the desert.
+  ;;entire battle was fought in the span of ~1500 meters, so if we make our entire area 3000 meters, that should be enough maneuvering room.
+  set scale_factor_x max-pxcor / 3000  ;; this will give us a fraction so we can work with xycor easier
+  set scale_factor_y max-pycor / 3000  ;;this will give us a fraction so we can work with xycor easier
+end
 
 to go
-  ;;if not any? turtles [ stop ]
+  ;;sanity check and make sure somehow our tanks didn't all destroy each other
+  if not any? turtles [ stop ]
+
+
   ask m1a1s
   [
     move
+    m1a1engage
     death
+    ;;reproduce-m1a1s
   ]
   ask t72s
   [
-    move
+    ;;based on historical data the Iraqi Republican Guard tanks didn't move during the battle.
+    ;;move
+    ;;set energy energy - 1  ;; t72s lose energy as they move
+    ;;catch-m1a1s
+    t72engage
     death
+    ;;reproduce-t72s
   ]
 end
 
-to move  ;; turtle procedure
-  fd 1
+to move
+   ;; our M1A1s are going to be moving towards the right
+   ;;first we'll do a GPS check...if the M1A1s have GPS they'll stay together and hopefully engage at all around the same time. if they don't have GPS, then they'll wander and who knows when they'll engage.
+   ifelse M1A1_GPS = True
+   [fd 1]
+   [rt (random 4 + random -4) fd 1]
 end
+
+to m1a1engage
+  ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
+  ;; convert our patches into distance...
+  let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
+  let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range
+  let m1a1_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
+  if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
+  [ask m1a1targets [set hp hp - 1]]
+  ;print [hp] of m1a1targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
+end
+
+to t72engage
+  ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
+  ;; convert our patches into distance...
+  let t72max_engagement_range t72thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
+  let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
+  let t72_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
+  if t72_shot <= t72hitrate ;;check this random number against our hit probability...
+  [ask t72targets [set hp hp - 1]]
+  ;print [hp] of t72targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
+end
+
+
 
 
 ;;to reproduce-t72s  ;; t72s procedure
@@ -124,7 +178,7 @@ end
 
 to death  ;; turtle procedure
   ;;when energy dips below zero, die
-  if hp < 0 [ die ]
+  if hp <= 0 [ die ]
 end
 
 ;;to display-labels
@@ -161,9 +215,9 @@ end
 ; See Info tab for full copyright and license.
 @#$#@#$#@
 GRAPHICS-WINDOW
-350
+347
 10
-1370
+1367
 1051
 50
 50
@@ -174,8 +228,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -50
 50
@@ -188,26 +242,6 @@ ticks
 30.0
 
 TEXTBOX
-8
-80
-148
-99
-Sheep settings
-11
-0.0
-0
-
-TEXTBOX
-186
-80
-299
-98
-Wolf settings
-11
-0.0
-0
-
-TEXTBOX
 104
 10
 254
@@ -218,10 +252,10 @@ Agent Model
 0
 
 BUTTON
-38
-35
-101
-68
+26
+92
+89
+125
 setup
 setup
 NIL
@@ -235,10 +269,10 @@ NIL
 1
 
 BUTTON
-118
-49
-181
-82
+96
+95
+159
+128
 NIL
 go
 T
@@ -252,24 +286,24 @@ NIL
 1
 
 SLIDER
-5
+6
 129
-194
+195
 162
 initial-number-m1a1
 initial-number-m1a1
 0
 50
-11
+9
 1
 1
 m1a1
 HORIZONTAL
 
 SLIDER
-3
+4
 169
-175
+176
 202
 initial-number-t72
 initial-number-t72
@@ -282,9 +316,9 @@ t72
 HORIZONTAL
 
 SLIDER
-3
+4
 216
-175
+176
 249
 lead_m1a1_x_cor
 lead_m1a1_x_cor
@@ -297,9 +331,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-3
+4
 257
-175
+176
 290
 lead_m1a1_y_cor
 lead_m1a1_y_cor
@@ -312,15 +346,15 @@ NIL
 HORIZONTAL
 
 SLIDER
-3
+4
 295
-175
+176
 328
 lead_t72_x_cor
 lead_t72_x_cor
 min-pxcor
 max-pxcor
-20
+21
 1
 1
 NIL
@@ -341,88 +375,129 @@ max-pycor
 NIL
 HORIZONTAL
 
+SWITCH
+2
+376
+180
+409
+M1A1_Thermal_Sights
+M1A1_Thermal_Sights
+0
+1
+-1000
+
+SWITCH
+1
+415
+206
+448
+M1A1_Turret_Stablization
+M1A1_Turret_Stablization
+0
+1
+-1000
+
+SWITCH
+3
+456
+119
+489
+M1A1_GPS
+M1A1_GPS
+1
+1
+-1000
+
+SWITCH
+4
+493
+171
+526
+T72_Thermal_Sights
+T72_Thermal_Sights
+0
+1
+-1000
+
+SWITCH
+6
+531
+201
+564
+T72_Turret_Stablization
+T72_Turret_Stablization
+0
+1
+-1000
+
+SWITCH
+6
+569
+111
+602
+T72_GPS
+T72_GPS
+0
+1
+-1000
+
+MONITOR
+220
+383
+300
+428
+NIL
+m1a1hitrate
+17
+1
+11
+
+MONITOR
+221
+498
+290
+543
+NIL
+t72hitrate
+17
+1
+11
+
+MONITOR
+209
+582
+304
+627
+NIL
+scale_factor_x
+17
+1
+11
+
 @#$#@#$#@
 ## WHAT IS IT?
 
-This model explores the relationship between two different models of predator-prey ecosystems: an agent-based model and a aggregate model.  Each of the models can be run separately, or docked side-by-side for comparison.
-
-In the agent model, wolves and sheep wander randomly around the landscape, while the wolves look for sheep to prey on. Each step costs the wolves energy, and they must eat sheep in order to replenish their energy - when they run out of energy they die. To allow the population to continue, each wolf or sheep has a fixed probability of reproducing at each time step.
-
-The aggregate model is a System Dynamics model of the relationship between populations our wolves and sheep.  It is based on a version of the famous Lotka-Volterra model of interactions between two species in an ecosystem.
+This is a model of the Battle of 73 Easting during Gulf War I in February 1991.
 
 ## HOW TO USE IT
+Set the position of the lead US Army M1A1 and the lead Iraqi Republican Guard T-72. By default, these positions are indicative of the historic location of the battle.
 
-1. Adjust the slider parameters (see below), or use the default settings.
-3. Press the SETUP-COMPARISON button.
-4. Press the COMPARE button to begin the simulation.
-5. View the POPULATIONS and AGENT-POPULATIONS plots to watch the populations fluctuate over time
-
-Parameters shared between agent and aggregate models:
-- INITIAL-NUMBER-SHEEP: The initial size of sheep population
-- INITIAL-NUMBER-WOLVES: The initial size of wolf population
-- SHEEP-REPRODUCE: The probability of a sheep reproducing at each time step
-
-Parameters for agent model:
-- SHEEP-MAX-INITIAL-ENERGY: At setup time, sheep are given an energy between 1 and this value
-- WOLF-GAIN-FROM-FOOD: The amount of energy wolves get for every sheep eaten
-- WOLF-REPRODUCE: The probability of a wolf reproducing at each time step
-
-Parameters for aggregate model:
-- WOLVES-DEATH-RATE: The rate at which wolves die.
-- PREDATION-RATE: The rate at which wolves eat sheep.
-- PREDATOR-EFFICIENCY: The efficiency of the wolves in extracting energy to reproduce from the prey they eat.
 
 ## THINGS TO NOTICE
 
-Why do you suppose that some variations of the model might be stable while others are not?
 
 ## THINGS TO TRY
 
-Try adjusting the parameters under various settings. How sensitive is the stability of the model to the particular parameters?
 
-Notice that under stable settings, the populations tend to fluctuate at a predictable pace. Can you find any parameters that will speed this up or slow it down?
-
-## EXTENDING THE MODEL
-
-There are a number ways to alter the model so that it will be stable with only wolves and sheep (no grass). Some will require new elements to be coded in or existing behaviors to be changed. Can you develop such a version?
 
 ## NETLOGO FEATURES
 
-Note the use of the System Dynamics Modeler to create the aggregate model.
 
 ## RELATED MODELS
 
-Look at the Wolf Sheep Predation model for an example of an agent model which can produce a stable model of predator-prey ecosystems.
+
 
 ## CREDITS AND REFERENCES
-
-- Lotka, A.J. (1956) Elements of Mathematical Biology.  New York: Dover.
-- Wilensky, U. & Reisman, K. (1999). Connected Science: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. International Journal of Complex Systems, M. 234, pp. 1 - 12. (This model is a slightly extended version of the model described in the paper.)
-- Wilensky, U. & Reisman, K. (in press). Thinking like a Wolf, a Sheep or a Firefly: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. Cognition & Instruction.
-
-## HOW TO CITE
-
-If you mention this model or the NetLogo software in a publication, we ask that you include the citations below.
-
-For the model itself:
-
-* Wilensky, U. (2005).  NetLogo Wolf Sheep Predation (Docked Hybrid) model.  http://ccl.northwestern.edu/netlogo/models/WolfSheepPredation(DockedHybrid).  Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-
-Please cite the NetLogo software as:
-
-* Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-
-## COPYRIGHT AND LICENSE
-
-Copyright 2005 Uri Wilensky.
-
-![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
-
-Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
-
-<!-- 2005 -->
 @#$#@#$#@
 default
 true
