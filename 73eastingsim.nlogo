@@ -107,7 +107,8 @@ end
 
 to go
   ;;sanity check and make sure somehow our tanks didn't all destroy each other
-  if not any? turtles [ stop ]
+  if not any? t72s [ stop ]
+  if not any? m1a1s [stop]
 
 
   ask m1a1s
@@ -127,6 +128,7 @@ to go
     death
     ;;reproduce-t72s
   ]
+  tick
 end
 
 to move
@@ -142,10 +144,11 @@ to m1a1engage
   ;; convert our patches into distance...
   let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range
+  create-links-to m1a1targets [set color blue] ;;show what units the M1A1s are engaging
   set m1a1_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
   if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
   [ask m1a1targets [set hp hp - 1]]
-  ;print [hp] of m1a1targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
+
 end
 
 to t72engage
@@ -153,6 +156,7 @@ to t72engage
   ;; convert our patches into distance...
   let t72max_engagement_range t72thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
+  create-links-to t72targets [set color red]
   set t72_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
   if t72_shot <= t72hitrate ;;check this random number against our hit probability...
   [ask t72targets [set hp hp - 1]]
@@ -523,7 +527,7 @@ Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
 10000
-3000
+2000
 1
 1
 meters
@@ -538,7 +542,7 @@ Desert_Width_In_Meters
 Desert_Width_In_Meters
 100
 10000
-3000
+2000
 1
 1
 meters
