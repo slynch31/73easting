@@ -20,12 +20,12 @@
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
 
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
-m1a1s-own [hp]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
-t72s-own [hp]       ;; both t72s and m1a1s have options for hit points, thermal sights, turrent stabilization, and GPS
+m1a1s-own [hp]       ;; both t72s and m1a1s have hit points
+t72s-own [hp]       ;; both t72s and m1a1s have hit points
 
 to setup
   clear-all
@@ -76,7 +76,7 @@ to setup-technology
        [set M1A1turret_stab 0]
       ifelse M1A1_Thermal_Sights = True
        [set M1A1thermal_sights 1 set M1A1thermal_sights_range 1420] ;;1420 was the engagement ranged afforded to McMaster's M1A1 due to thermal sights from his front line account
-       [set M1A1thermal_sights 0 set M1A1thermal_sights_range ]
+       [set M1A1thermal_sights 0 set M1A1thermal_sights_range 50] ;;assume an engagement range of 50m if we don't have thermal sights
       ifelse M1A1_GPS = True
        [set M1A1gps 1]
        [set M1A1gps 0]
@@ -84,8 +84,8 @@ to setup-technology
        [set T72turret_stab 1]
        [set T72turret_stab 0]
       ifelse T72_Thermal_Sights = True
-       [set T72thermal_sights 1]
-       [set T72thermal_sights 0]
+       [set T72thermal_sights 1 set T72thermal_sights_range 700] ;;assume the Iraqi version to be 1/2 to 1/3 as good.
+       [set T72thermal_sights 0 set T72thermal_sights_range 50] ;;assume this is all you can see in a sandstorm...is this a good estimate?
       ifelse T72_GPS = True
        [set T72gps 1]
        [set T72gps 0]
