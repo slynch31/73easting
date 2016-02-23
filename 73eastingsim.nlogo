@@ -113,7 +113,7 @@ to go
   ask m1a1s
   [
     move
-    engage
+    m1a1engage
     death
     ;;reproduce-m1a1s
   ]
@@ -123,6 +123,7 @@ to go
     ;;move
     ;;set energy energy - 1  ;; t72s lose energy as they move
     ;;catch-m1a1s
+    t72engage
     death
     ;;reproduce-t72s
   ]
@@ -136,16 +137,28 @@ to move
    [rt (random 4 + random -4) fd 1]
 end
 
-to engage
+to m1a1engage
   ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
   ;; convert our patches into distance...
-  let max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
-   ask t72s in-radius max_engagement_range ;;find any T-72s in our max engagement range
-  [ fd 1 ] ;; this is just a placeholder to make sure that we're meeting our condition
+  let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
+  let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range
   let m1a1_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
   if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
-   [] ;; kill the T-72 if we land the hit, otherwise, shoot again.
+  [ask m1a1targets [set hp hp - 1]]
+  ;print [hp] of m1a1targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
 end
+
+to t72engage
+  ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
+  ;; convert our patches into distance...
+  let t72max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
+  let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
+  let t72_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
+  if t72_shot <= t72hitrate ;;check this random number against our hit probability...
+  [ask t72targets [set hp hp - 1]]
+  ;print [hp] of t72targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
+end
+
 
 
 
@@ -165,7 +178,7 @@ end
 
 to death  ;; turtle procedure
   ;;when energy dips below zero, die
-  if hp < 0 [ die ]
+  if hp <= 0 [ die ]
 end
 
 ;;to display-labels
@@ -402,7 +415,7 @@ SWITCH
 526
 T72_Thermal_Sights
 T72_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -413,7 +426,7 @@ SWITCH
 564
 T72_Turret_Stablization
 T72_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -424,7 +437,7 @@ SWITCH
 602
 T72_GPS
 T72_GPS
-1
+0
 1
 -1000
 
