@@ -101,8 +101,8 @@ end
 to setup-desert
   ;;in this function we're going to setup and normalize the desert.
   ;;entire battle was fought in the span of ~1500 meters, so if we make our entire area 3000 meters, that should be enough maneuvering room.
-  set scale_factor_x 3000 / max-pxcor  ;; this will give us a fraction so we can work with xycor easier
-  set scale_factor_y 3000 / max-pycor  ;;this will give us a fraction so we can work with xycor easier
+  set scale_factor_x max-pxcor / 3000  ;; this will give us a fraction so we can work with xycor easier
+  set scale_factor_y max-pycor / 3000  ;;this will give us a fraction so we can work with xycor easier
 end
 
 to go
@@ -130,7 +130,7 @@ end
 
 to move
    ;; our M1A1s are going to be moving towards the right
-   ;;first we'll do a GPS check...if the M1A1s have GPS they'll stay together and hopefully engage at all around the same time. if they don't have GPS, then they'll wander.
+   ;;first we'll do a GPS check...if the M1A1s have GPS they'll stay together and hopefully engage at all around the same time. if they don't have GPS, then they'll wander and who knows when they'll engage.
    ifelse M1A1_GPS = True
    [fd 1]
    [rt (random 4 + random -4) fd 1]
@@ -138,10 +138,13 @@ end
 
 to engage
   ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
-
+  ;; convert our patches into distance...
+  let max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
+   ask t72s in-radius max_engagement_range ;;find any T-72s in our max engagement range
+  [ fd 1 ] ;; this is just a placeholder to make sure that we're meeting our condition
   let m1a1_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
-  if m1a1_shot <= m1a1hitrate
-   []
+  if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
+   [] ;; kill the T-72 if we land the hit, otherwise, shoot again.
 end
 
 
@@ -212,8 +215,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -50
 50
@@ -338,7 +341,7 @@ lead_t72_x_cor
 lead_t72_x_cor
 min-pxcor
 max-pxcor
-20
+21
 1
 1
 NIL
@@ -443,6 +446,17 @@ MONITOR
 543
 NIL
 t72hitrate
+17
+1
+11
+
+MONITOR
+209
+582
+304
+627
+NIL
+scale_factor_x
 17
 1
 11
