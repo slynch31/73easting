@@ -151,7 +151,7 @@ end
 to t72engage
   ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
   ;; convert our patches into distance...
-  let t72max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
+  let t72max_engagement_range t72thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
   let t72_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
   if t72_shot <= t72hitrate ;;check this random number against our hit probability...
@@ -294,7 +294,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 50
-7
+9
 1
 1
 m1a1
@@ -404,7 +404,7 @@ SWITCH
 489
 M1A1_GPS
 M1A1_GPS
-0
+1
 1
 -1000
 
