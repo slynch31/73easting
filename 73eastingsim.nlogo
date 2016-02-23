@@ -50,7 +50,7 @@ to setup-m1a1s
   let initial-number-m1a1-mod initial-number-m1a1 - 1
   if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
   ;;create the LEAD m1a1
-  create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90 set hp 1]
+  create-m1a1s 1 [set color sky set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90 set hp 1]
 end
 
 
@@ -113,6 +113,7 @@ to go
   ask m1a1s
   [
     move
+    engage
     death
     ;;reproduce-m1a1s
   ]
@@ -135,6 +136,13 @@ to move
    [rt (random 4 + random -4) fd 1]
 end
 
+to engage
+  ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
+
+  let m1a1_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
+  if m1a1_shot <= m1a1hitrate
+   []
+end
 
 
 
@@ -228,10 +236,10 @@ Agent Model
 0
 
 BUTTON
-38
-35
-101
-68
+26
+92
+89
+125
 setup
 setup
 NIL
@@ -245,10 +253,10 @@ NIL
 1
 
 BUTTON
-108
-38
-171
-71
+96
+95
+159
+128
 NIL
 go
 T
@@ -270,7 +278,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 50
-9
+7
 1
 1
 m1a1
@@ -380,7 +388,7 @@ SWITCH
 489
 M1A1_GPS
 M1A1_GPS
-1
+0
 1
 -1000
 
