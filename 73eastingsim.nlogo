@@ -20,7 +20,7 @@
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
 
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
@@ -76,7 +76,7 @@ to setup-technology
        [set M1A1turret_stab 1]
        [set M1A1turret_stab 0]
       ifelse M1A1_Thermal_Sights = True
-       [set M1A1thermal_sights 1 set M1A1thermal_sights_range 1420] ;;1420 was the engagement ranged afforded to McMaster's M1A1 due to thermal sights from his front line account
+       [set M1A1thermal_sights 1 set M1A1thermal_sights_range M1A1_Thermal_Sights_Range] ;;1420 was the engagement ranged afforded to McMaster's M1A1 due to thermal sights from his front line account
        [set M1A1thermal_sights 0 set M1A1thermal_sights_range 50] ;;assume an engagement range of 50m if we don't have thermal sights
       ifelse M1A1_GPS = True
        [set M1A1gps 1]
@@ -85,7 +85,7 @@ to setup-technology
        [set T72turret_stab 1]
        [set T72turret_stab 0]
       ifelse T72_Thermal_Sights = True
-       [set T72thermal_sights 1 set T72thermal_sights_range 700] ;;assume the Iraqi version to be 1/2 to 1/3 as good.
+       [set T72thermal_sights 1 set T72thermal_sights_range T72_Thermal_Sights_Range] ;;assume the Iraqi version to be 1/2 to 1/3 as good.
        [set T72thermal_sights 0 set T72thermal_sights_range 50] ;;assume this is all you can see in a sandstorm...is this a good estimate?
       ifelse T72_GPS = True
        [set T72gps 1]
@@ -101,8 +101,8 @@ end
 to setup-desert
   ;;in this function we're going to setup and normalize the desert.
   ;;entire battle was fought in the span of ~1500 meters, so if we make our entire area 3000 meters, that should be enough maneuvering room.
-  set scale_factor_x max-pxcor / 3000  ;; this will give us a fraction so we can work with xycor easier
-  set scale_factor_y max-pycor / 3000  ;;this will give us a fraction so we can work with xycor easier
+  set scale_factor_x max-pxcor / Desert_Length_In_Meters  ;; this will give us a fraction so we can work with xycor easier
+  set scale_factor_y max-pycor / Desert_Width_In_Meters  ;;this will give us a fraction so we can work with xycor easier
 end
 
 to go
@@ -142,7 +142,7 @@ to m1a1engage
   ;; convert our patches into distance...
   let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range
-  let m1a1_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
+  set m1a1_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
   if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
   [ask m1a1targets [set hp hp - 1]]
   ;print [hp] of m1a1targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
@@ -153,7 +153,7 @@ to t72engage
   ;; convert our patches into distance...
   let t72max_engagement_range t72thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
-  let t72_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
+  set t72_shot random-normal 0.5 0.382924922548026 ;;have a randomly distributed normal variable with a mean of 0.5 and a std of u/2
   if t72_shot <= t72hitrate ;;check this random number against our hit probability...
   [ask t72targets [set hp hp - 1]]
   ;print [hp] of t72targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
@@ -215,9 +215,9 @@ end
 ; See Info tab for full copyright and license.
 @#$#@#$#@
 GRAPHICS-WINDOW
-347
+601
 10
-1367
+1621
 1051
 50
 50
@@ -239,7 +239,7 @@ GRAPHICS-WINDOW
 0
 1
 ticks
-30.0
+7.0
 
 TEXTBOX
 104
@@ -387,76 +387,76 @@ M1A1_Thermal_Sights
 -1000
 
 SWITCH
+2
+454
+207
+487
+M1A1_Turret_Stablization
+M1A1_Turret_Stablization
+0
 1
-415
-206
-448
-M1A1_Turret_Stablization
-M1A1_Turret_Stablization
+-1000
+
+SWITCH
+1
+491
+117
+524
+M1A1_GPS
+M1A1_GPS
 0
 1
 -1000
 
 SWITCH
 3
-456
-119
-489
-M1A1_GPS
-M1A1_GPS
+527
+170
+560
+T72_Thermal_Sights
+T72_Thermal_Sights
+1
+1
+-1000
+
+SWITCH
+3
+600
+198
+633
+T72_Turret_Stablization
+T72_Turret_Stablization
 1
 1
 -1000
 
 SWITCH
 4
-493
-171
-526
-T72_Thermal_Sights
-T72_Thermal_Sights
-0
-1
--1000
-
-SWITCH
-6
-531
-201
-564
-T72_Turret_Stablization
-T72_Turret_Stablization
-0
-1
--1000
-
-SWITCH
-6
-569
-111
-602
+637
+109
+670
 T72_GPS
 T72_GPS
-0
+1
 1
 -1000
 
 MONITOR
-220
-383
-300
-428
+292
+132
+372
+177
 NIL
 m1a1hitrate
-17
+7
 1
 11
 
 MONITOR
-221
-498
-290
-543
+292
+180
+361
+225
 NIL
 t72hitrate
 17
@@ -464,15 +464,126 @@ t72hitrate
 11
 
 MONITOR
-209
-582
-304
-627
+292
+232
+387
+277
 NIL
 scale_factor_x
-17
+6
 1
 11
+
+SLIDER
+2
+415
+265
+448
+M1A1_Thermal_Sights_Range
+M1A1_Thermal_Sights_Range
+0
+2000
+1418
+1
+1
+meters
+HORIZONTAL
+
+TEXTBOX
+293
+98
+443
+126
+Computed Values from Simulation
+11
+0.0
+1
+
+SLIDER
+4
+563
+256
+596
+T72_Thermal_Sights_Range
+T72_Thermal_Sights_Range
+50
+2000
+700
+1
+1
+meters
+HORIZONTAL
+
+SLIDER
+4
+675
+254
+708
+Desert_Length_In_Meters
+Desert_Length_In_Meters
+100
+10000
+3000
+1
+1
+meters
+HORIZONTAL
+
+SLIDER
+4
+710
+248
+743
+Desert_Width_In_Meters
+Desert_Width_In_Meters
+100
+10000
+3000
+1
+1
+meters
+HORIZONTAL
+
+MONITOR
+293
+280
+419
+325
+Current P_hit of T72
+t72_shot
+7
+1
+11
+
+MONITOR
+293
+328
+429
+373
+Current P_hit of M1A1
+m1a1_shot
+7
+1
+11
+
+PLOT
+292
+375
+492
+525
+Number Of Tanks
+Time
+# Of Tanks
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -13345367 true "" "plot count m1a1s"
+"pen-1" 1.0 0 -2674135 true "" "plot count t72s"
 
 @#$#@#$#@
 ## WHAT IS IT?
