@@ -20,7 +20,7 @@
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
 
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
@@ -49,6 +49,7 @@ to setup-m1a1s
   let initial-number-m1a1-mod initial-number-m1a1 - 1
   if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
   ;;create the LEAD m1a1
+  create-m1a1s 1 [set color white set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90 set hp 1]
 end
 
 
@@ -74,8 +75,8 @@ to setup-technology
        [set M1A1turret_stab 1]
        [set M1A1turret_stab 0]
       ifelse M1A1_Thermal_Sights = True
-       [set M1A1thermal_sights 1]
-       [set M1A1thermal_sights 0]
+       [set M1A1thermal_sights 1 set M1A1thermal_sights_range 1420] ;;1420 was the engagement ranged afforded to McMaster's M1A1 due to thermal sights from his front line account
+       [set M1A1thermal_sights 0 set M1A1thermal_sights_range ]
       ifelse M1A1_GPS = True
        [set M1A1gps 1]
        [set M1A1gps 0]
@@ -122,6 +123,7 @@ end
 to move  ;; our M1A1s are going to be moving towards the right
   fd 1
 end
+
 
 
 
@@ -322,7 +324,7 @@ lead_m1a1_y_cor
 lead_m1a1_y_cor
 min-pycor
 max-pycor
-0
+5
 1
 1
 NIL
@@ -365,7 +367,7 @@ SWITCH
 409
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -376,7 +378,7 @@ SWITCH
 448
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -387,7 +389,7 @@ SWITCH
 489
 M1A1_GPS
 M1A1_GPS
-1
+0
 1
 -1000
 
@@ -398,7 +400,7 @@ SWITCH
 526
 T72_Thermal_Sights
 T72_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -409,7 +411,7 @@ SWITCH
 564
 T72_Turret_Stablization
 T72_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -420,7 +422,7 @@ SWITCH
 602
 T72_GPS
 T72_GPS
-1
+0
 1
 -1000
 
