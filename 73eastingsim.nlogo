@@ -153,9 +153,8 @@ to m1a1engage
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   if shoot = true
   [
-    if m1a1_fired = 0
+    if fired = 0
     [
-  ;if m1a1_fired = 0
    create-link-to target [set color blue] ;;show what units the M1A1s are engaging
    let targetrange [distance myself] of target / scale_factor_x
    show targetrange
@@ -187,7 +186,7 @@ to t72engage
   ;;let targetrange distance target * scale_factor_x
   if shoot = true
   [
-    if t72_fired = 0
+    if fired = 0
     [
       create-links-to t72targets [set color red]
       let targetrange [distance myself] of target / scale_factor_x
@@ -440,7 +439,7 @@ SWITCH
 487
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -451,7 +450,7 @@ SWITCH
 524
 M1A1_GPS
 M1A1_GPS
-0
+1
 1
 -1000
 
