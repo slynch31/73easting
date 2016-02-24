@@ -165,7 +165,7 @@ to m1a1engage
    show m1a1hitrate
    set m1a1_shot random 1 ;;have a randomly distributed uniform [0,1].
    if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
-    [ask m1a1targets [set hp hp - 1]]
+    [ask target [set hp hp - 1]]
     set m1a1_fired 1 ; this M1A1 already fired this tick!
     ask m1a1s [set fired 1] ;
     ]
@@ -198,7 +198,7 @@ to t72engage
       show t72hitrate
       set t72_shot random 1 ;;have a randomly distributed uniform [0,1].
       if t72_shot <= t72hitrate ;;check this random number against our hit probability...
-      [ask t72targets [set hp hp - 1]]
+      [ask target [set hp hp - 1]]
       set t72_fired 1 ; this M1A1 already fired this tick!
       ask t72s [set fired 1]
      ]
@@ -341,7 +341,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 50
-9
+8
 1
 1
 m1a1
@@ -530,7 +530,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-1419
+1450
 1
 1
 meters
@@ -555,7 +555,7 @@ T72_Thermal_Sights_Range
 T72_Thermal_Sights_Range
 50
 2000
-708
+731
 1
 1
 meters
