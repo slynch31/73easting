@@ -113,8 +113,6 @@ to go
   ;;sanity check and make sure somehow our tanks didn't all destroy each other
   if not any? t72s [ stop ]
   if not any? m1a1s [stop]
-
-
   ask m1a1s
   [
     move
@@ -128,10 +126,11 @@ to go
     death
     ;;reproduce-t72s
   ]
+  ;reset all of our shots fired per tick variables
   set m1a1_fired 0
   set t72_fired 0
   ask m1a1s [set fired 0]
-  ask m1a1s [set fired 0]
+  ask t72s [set fired 0]
   tick
 end
 
@@ -441,7 +440,7 @@ SWITCH
 487
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -531,7 +530,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-702
+1419
 1
 1
 meters
