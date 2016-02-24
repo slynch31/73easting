@@ -131,6 +131,7 @@ to go
   set t72_fired 0
   ask m1a1s [set fired 0]
   ask t72s [set fired 0]
+  clear-links ;; reset links so we can see missed shots (if we're looking...)
   tick
 end
 
@@ -139,7 +140,7 @@ to move
    ;;first we'll do a GPS check...if the M1A1s have GPS they'll stay together and hopefully engage at all around the same time. if they don't have GPS, then they'll wander and who knows when they'll engage.
    ifelse M1A1_GPS = True
    [fd 1]
-   [rt (random 4 + random -4) fd 1]
+   [rt (random 4 + random -4) fd 1] ;; this is how we're going to implement a slight drift in GPS
 end
 
 to m1a1engage
