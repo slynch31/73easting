@@ -20,12 +20,12 @@
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
 
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_fired t72_fired]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
-m1a1s-own [hp]       ;; both t72s and m1a1s have hit points
-t72s-own [hp]       ;; both t72s and m1a1s have hit points
+m1a1s-own [hp fired]       ;; both t72s and m1a1s have hit points
+t72s-own [hp fired]       ;; both t72s and m1a1s have hit points
 
 to setup
   clear-all
@@ -91,7 +91,11 @@ to setup-technology
        [set T72gps 1]
        [set T72gps 0]
   ;;we'll use a modified version of the empirical formula used on page 36 with data from page 20 incorporating our
-  set m1a1hitrate (0.64 + ( 0.00443299 * M1A1turret_stab ) + ( 0.01676 * M1A1thermal_sights ) + ( 0.02311 * M1A1gps ))
+  ;;first iteration hit rate
+  ;;set m1a1hitrate (0.64 + ( 0.00443299 * M1A1turret_stab ) + ( 0.01676 * M1A1thermal_sights ) + ( 0.02311 * M1A1gps ))
+  ;;set t72hitrate (0.5 + ( 0.00543299 * T72turret_stab ) + (0.00676  * T72thermal_sights ) + (0.01311 * T72gps )) / 2
+  ;;second iteration hit rate
+  set m1a1hitadjust (1 + ( 0.00443299 * (1 - M1A1turret_stab ) ) + ( 0.01676 * (1 - M1A1thermal_sights ) ) + ( 0.02311 * (1 - M1A1gps )))
   set t72hitrate (0.5 + ( 0.00543299 * T72turret_stab ) + (0.00676  * T72thermal_sights ) + (0.01311 * T72gps )) / 2
   ;;in here we'll setup up our technology variables
   ;; note for all this the point of the model isn't to see if the technology should be IMPROVED at all, it's to see if a
@@ -116,19 +120,19 @@ to go
     move
     m1a1engage
     death
-    ;;reproduce-m1a1s
   ]
   ask t72s
   [
     ;;based on historical data the Iraqi Republican Guard tanks didn't move during the battle.
-    ;;move
-    ;;set energy energy - 1  ;; t72s lose energy as they move
-    ;;catch-m1a1s
     t72engage
     death
     ;;reproduce-t72s
   ]
   tick
+  set m1a1_fired 0
+  set t72_fired 0
+  ask m1a1s [set fired 0]
+  ask m1a1s [set fired 0]
 end
 
 to move
@@ -143,11 +147,28 @@ to m1a1engage
   ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
   ;; convert our patches into distance...
   let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
+
   let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range
-  create-links-to m1a1targets [set color blue] ;;show what units the M1A1s are engaging
-  set m1a1_shot random-normal 0.5 (0.5 / 3) ;;have a randomly distributed normal variable with a mean of 0.5 and having 99.7% of values fall between 0 and 1.
-  if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
-  [ask m1a1targets [set hp hp - 1]]
+  let target min-one-of m1a1targets [distance myself] ;; engage the closest T72
+  let shoot false
+  if target != nobody [ set shoot true ] ;;if there's somebody in range
+  if shoot = true [
+  if m1a1_fired = 0
+  [
+  create-link-to target [set color blue] ;;show what units the M1A1s are engaging
+   let targetrange [distance myself] of target / scale_factor_x
+   show targetrange
+   ;let targetrange 1500
+   let cep (m1a1hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our cep
+   set m1a1hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our m1a1hitrate
+   show m1a1hitrate
+   set m1a1_shot random 1 ;;have a randomly distributed uniform [0,1].
+   if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
+    [ask m1a1targets [set hp hp - 1]]]
+  set m1a1_fired 1 ; this M1A1 already fired this tick!
+  ask m1a1s [set fired 1] ;
+  ]
+
 
 end
 
@@ -156,10 +177,38 @@ to t72engage
   ;; convert our patches into distance...
   let t72max_engagement_range t72thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
+  let target min-one-of t72targets [distance myself] ;; engage the closest M1A1
+  ;;TO DO - IF and ONLY IF we've already been fired on!
+  let shoot false
+  if target != nobody [ set shoot true ] ;;if there's somebody in range
+  ;;let targetrange distance target * scale_factor_x
+
+  if shoot = true
+  [
+    if t72_fired = 0
+    [
+      let targetrange [distance myself] of target / scale_factor_x
+      show targetrange
+      ;let targetrange 1500
+      let cep (t72hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our cep
+      set t72hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our m1a1hitrate
+      show t72hitrate
+      set t72_shot random 1 ;;have a randomly distributed uniform [0,1].
+      if t72_shot <= t72hitrate ;;check this random number against our hit probability...
+      [ask t72targets [set hp hp - 1]]]
+    create-links-to t72targets [set color red] ;;show what units the T72s are engaging
+  ;set m1a1_shot random 1 ;random-normal 0.5 (0.5 / 3) ;;have a randomly distributed normal variable with a mean of 0.5 and having 99.7% of values fall between 0 and 1.
+  ;if t72_shot <= m1a1hitrate ;;check this random number against our hit probability...
+  ;[ask m1a1targets [set hp hp - 1]]
+  set t72_fired 1 ; this M1A1 already fired this tick!
+  ]
+
   create-links-to t72targets [set color red]
-  set t72_shot random-normal 0.5 (0.5 / 3) ;;have a randomly distributed normal variable with a mean of 0.5 and having 99.7% of values fall between 0 and 1.
+  set t72_shot random 1 ;random-normal 0.5 (0.5 / 3) ;;have a randomly distributed normal variable with a mean of 0.5 and having 99.7% of values fall between 0 and 1.
   if t72_shot <= t72hitrate ;;check this random number against our hit probability...
   [ask t72targets [set hp hp - 1]]
+  set t72_fired 1 ;;this T72 already fired this tick!
+  ask t72s [set fired 1]
   ;print [hp] of t72targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
 end
 
@@ -386,7 +435,7 @@ SWITCH
 409
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -397,7 +446,7 @@ SWITCH
 487
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -408,7 +457,7 @@ SWITCH
 524
 M1A1_GPS
 M1A1_GPS
-1
+0
 1
 -1000
 
@@ -419,7 +468,7 @@ SWITCH
 560
 T72_Thermal_Sights
 T72_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -512,7 +561,7 @@ T72_Thermal_Sights_Range
 T72_Thermal_Sights_Range
 50
 2000
-700
+708
 1
 1
 meters
