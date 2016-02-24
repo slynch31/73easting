@@ -128,11 +128,11 @@ to go
     death
     ;;reproduce-t72s
   ]
-  tick
   set m1a1_fired 0
   set t72_fired 0
   ask m1a1s [set fired 0]
   ask m1a1s [set fired 0]
+  tick
 end
 
 to move
@@ -152,10 +152,12 @@ to m1a1engage
   let target min-one-of m1a1targets [distance myself] ;; engage the closest T72
   let shoot false
   if target != nobody [ set shoot true ] ;;if there's somebody in range
-  if shoot = true [
-  if m1a1_fired = 0
+  if shoot = true
   [
-  create-link-to target [set color blue] ;;show what units the M1A1s are engaging
+    if m1a1_fired = 0
+    [
+  ;if m1a1_fired = 0
+   create-link-to target [set color blue] ;;show what units the M1A1s are engaging
    let targetrange [distance myself] of target / scale_factor_x
    show targetrange
    ;let targetrange 1500
@@ -164,10 +166,12 @@ to m1a1engage
    show m1a1hitrate
    set m1a1_shot random 1 ;;have a randomly distributed uniform [0,1].
    if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
-    [ask m1a1targets [set hp hp - 1]]]
-  set m1a1_fired 1 ; this M1A1 already fired this tick!
-  ask m1a1s [set fired 1] ;
+    [ask m1a1targets [set hp hp - 1]]
+    set m1a1_fired 1 ; this M1A1 already fired this tick!
+    ask m1a1s [set fired 1] ;
+    ]
   ]
+
 
 
 end
@@ -182,11 +186,11 @@ to t72engage
   let shoot false
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   ;;let targetrange distance target * scale_factor_x
-
   if shoot = true
   [
     if t72_fired = 0
     [
+      create-links-to t72targets [set color red]
       let targetrange [distance myself] of target / scale_factor_x
       show targetrange
       ;let targetrange 1500
@@ -195,21 +199,12 @@ to t72engage
       show t72hitrate
       set t72_shot random 1 ;;have a randomly distributed uniform [0,1].
       if t72_shot <= t72hitrate ;;check this random number against our hit probability...
-      [ask t72targets [set hp hp - 1]]]
-    create-links-to t72targets [set color red] ;;show what units the T72s are engaging
-  ;set m1a1_shot random 1 ;random-normal 0.5 (0.5 / 3) ;;have a randomly distributed normal variable with a mean of 0.5 and having 99.7% of values fall between 0 and 1.
-  ;if t72_shot <= m1a1hitrate ;;check this random number against our hit probability...
-  ;[ask m1a1targets [set hp hp - 1]]
-  set t72_fired 1 ; this M1A1 already fired this tick!
-  ]
+      [ask t72targets [set hp hp - 1]]
+      set t72_fired 1 ; this M1A1 already fired this tick!
+      ask t72s [set fired 1]
+     ]
 
-  create-links-to t72targets [set color red]
-  set t72_shot random 1 ;random-normal 0.5 (0.5 / 3) ;;have a randomly distributed normal variable with a mean of 0.5 and having 99.7% of values fall between 0 and 1.
-  if t72_shot <= t72hitrate ;;check this random number against our hit probability...
-  [ask t72targets [set hp hp - 1]]
-  set t72_fired 1 ;;this T72 already fired this tick!
-  ask t72s [set fired 1]
-  ;print [hp] of t72targets ;; kill the T-72 if we land the hit, otherwise, shoot again.
+  ]
 end
 
 
@@ -446,7 +441,7 @@ SWITCH
 487
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -468,7 +463,7 @@ SWITCH
 560
 T72_Thermal_Sights
 T72_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -479,7 +474,7 @@ SWITCH
 633
 T72_Turret_Stablization
 T72_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -490,7 +485,7 @@ SWITCH
 670
 T72_GPS
 T72_GPS
-1
+0
 1
 -1000
 
@@ -536,7 +531,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-1418
+702
 1
 1
 meters
