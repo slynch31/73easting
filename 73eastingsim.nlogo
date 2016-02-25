@@ -165,7 +165,7 @@ to m1a1engage
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   if shoot = true
   [
-    ifelse fired = 0
+    ifelse fired <= 0
     [
       create-link-to target [set color blue] ;;show what units the M1A1s are engaging
       let targetrange [distance myself] of target / scale_factor_x
@@ -195,7 +195,7 @@ to t72engage
   ;;let targetrange distance target * scale_factor_x
   if shoot = true
   [
-    ifelse fired = 0
+    ifelse fired <= 0
     [
       create-links-to t72targets [set color red]
       let targetrange [distance myself] of target / scale_factor_x
