@@ -19,7 +19,7 @@
 ;; Broadly - impact of technology
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
-
+;;this is the tick development branch!
 globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_fired t72_fired]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
