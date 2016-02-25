@@ -19,13 +19,13 @@
 ;; Broadly - impact of technology
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
-
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_fired t72_fired]  ;; Assume sand is flat after a point...
+;;this is the tick development branch!
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_move_speed m1a1_shot_speed]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
-m1a1s-own [hp fired]       ;; both t72s and m1a1s have hit points
-t72s-own [hp fired]       ;; both t72s and m1a1s have hit points
+m1a1s-own [hp fired time_since_shot]       ;; both t72s and m1a1s have hit points
+t72s-own [hp fired time_since_shot]       ;; both t72s and m1a1s have hit points
 
 to setup
   clear-all
@@ -34,6 +34,7 @@ to setup
   setup-t72s ;; create the t72s, then initialize their variables
   setup-technology
   setup-desert
+  setup-move
   reset-ticks
 end
 
@@ -103,11 +104,22 @@ to setup-technology
 end
 
 to setup-desert
-  ;;in this function we're going to setup and normalize the desert.
-  ;;entire battle was fought in the span of ~1500 meters, so if we make our entire area 3000 meters, that should be enough maneuvering room.
+  ;;in this function we're going to setup and normalize the desert
   set scale_factor_x max-pxcor / Desert_Length_In_Meters  ;; this will give us a fraction so we can work with xycor easier
   set scale_factor_y max-pycor / Desert_Width_In_Meters  ;;this will give us a fraction so we can work with xycor easier
 end
+
+
+to setup-move
+  ;; from open source documentation, the top speed (off road) of a M1A1 is 48km/h.
+  ;; and since we know our scale factors, we can get that each M1A1 should move 48e-3 * scale_factor per tick...we'll use scale factor X just to be simple.
+  set m1a1_move_speed 48000 / 3600 * scale_factor_x ;; get our move speed in m/s (will be 13.3m/s)
+end
+
+;to setup-engage
+;  ;; since we have a speed (48km/h, 13.33m/s * scale_factor_x), we can figure out the number of ticks it will take for an M1A1 to have moved for 3 seconds, roughly what McMaster recounts for the historical record on the shot time.
+;  set m1a1_shot_speed
+;end
 
 to go
   ;;sanity check and make sure somehow our tanks didn't all destroy each other
@@ -127,20 +139,19 @@ to go
     ;;reproduce-t72s
   ]
   ;reset all of our shots fired per tick variables
-  set m1a1_fired 0
-  set t72_fired 0
-  ask m1a1s [set fired 0]
-  ask t72s [set fired 0]
-  clear-links ;; reset links so we can see missed shots (if we're looking...)
+  ;ask m1a1s [set fired 0]
+  ;ask t72s [set fired 0]
   tick
+  clear-links ;; reset links so we can see missed shots (if we're looking...)
 end
 
 to move
    ;; our M1A1s are going to be moving towards the right
    ;;first we'll do a GPS check...if the M1A1s have GPS they'll stay together and hopefully engage at all around the same time. if they don't have GPS, then they'll wander and who knows when they'll engage.
    ifelse M1A1_GPS = True
-   [fd 1]
-   [rt (random 4 + random -4) fd 1] ;; this is how we're going to implement a slight drift in GPS
+   [fd m1a1_move_speed]
+   [rt (random 4 + random -4) fd m1a1_move_speed]
+    ;; this is how we're going to implement a slight drift in GPS
 end
 
 to m1a1engage
@@ -154,25 +165,22 @@ to m1a1engage
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   if shoot = true
   [
-    if fired = 0
+    ifelse fired = 0
     [
-   create-link-to target [set color blue] ;;show what units the M1A1s are engaging
-   let targetrange [distance myself] of target / scale_factor_x
-   show targetrange
-   ;let targetrange 1500
-   let cep (m1a1hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our cep
-   set m1a1hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our m1a1hitrate
-   show m1a1hitrate
-   set m1a1_shot random 1 ;;have a randomly distributed uniform [0,1].
-   if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
-    [ask target [set hp hp - 1]]
-    set m1a1_fired 1 ; this M1A1 already fired this tick!
-    ask m1a1s [set fired 1] ;
+      create-link-to target [set color blue] ;;show what units the M1A1s are engaging
+      let targetrange [distance myself] of target / scale_factor_x
+      show targetrange
+      let cep (m1a1hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our cep
+      set m1a1hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our m1a1hitrate
+      show m1a1hitrate
+      set m1a1_shot random-float 1 ;;have a randomly distributed uniform [0,1].
+      show m1a1_shot
+      if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
+          [ask target [set hp hp - 1]]
+      ask m1a1s [set fired 3] ;
     ]
+    [set fired fired - 1]
   ]
-
-
-
 end
 
 to t72engage
@@ -187,7 +195,7 @@ to t72engage
   ;;let targetrange distance target * scale_factor_x
   if shoot = true
   [
-    if fired = 0
+    ifelse fired = 0
     [
       create-links-to t72targets [set color red]
       let targetrange [distance myself] of target / scale_factor_x
@@ -196,14 +204,13 @@ to t72engage
       let cep (t72hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our cep
       set t72hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our m1a1hitrate
       show t72hitrate
-      set t72_shot random 1 ;;have a randomly distributed uniform [0,1].
+      set t72_shot random-float 1 ;;have a randomly distributed uniform [0,1].
       if t72_shot <= t72hitrate ;;check this random number against our hit probability...
-      [ask target [set hp hp - 1]]
-      set t72_fired 1 ; this M1A1 already fired this tick!
-      ask t72s [set fired 1]
-     ]
-
-  ]
+          [ask target [set hp hp - 1]]
+      ask t72s [set fired 3]
+    ]
+      [set fired fired - 1]
+      ]
 end
 
 
@@ -264,10 +271,10 @@ end
 GRAPHICS-WINDOW
 601
 10
-1621
-1051
-50
-50
+1421
+851
+40
+40
 10.0
 1
 14
@@ -278,10 +285,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--50
-50
--50
-50
+-40
+40
+-40
+40
 0
 0
 1
@@ -341,7 +348,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 50
-8
+9
 1
 1
 m1a1
@@ -451,7 +458,7 @@ SWITCH
 524
 M1A1_GPS
 M1A1_GPS
-1
+0
 1
 -1000
 
