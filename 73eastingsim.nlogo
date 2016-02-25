@@ -91,10 +91,6 @@ to setup-technology
       ifelse T72_GPS = True
        [set T72gps 1]
        [set T72gps 0]
-  ;;we'll use a modified version of the empirical formula used on page 36 with data from page 20 incorporating our
-  ;;first iteration hit rate
-  ;;set m1a1hitrate (0.64 + ( 0.00443299 * M1A1turret_stab ) + ( 0.01676 * M1A1thermal_sights ) + ( 0.02311 * M1A1gps ))
-  ;;set t72hitrate (0.5 + ( 0.00543299 * T72turret_stab ) + (0.00676  * T72thermal_sights ) + (0.01311 * T72gps )) / 2
   ;;second iteration hit rate
   set m1a1hitadjust (1 + ( 0.00443299 * (1 - M1A1turret_stab ) ) + ( 0.01676 * (1 - M1A1thermal_sights ) ) + ( 0.02311 * (1 - M1A1gps )))
   set t72hitrate (0.5 + ( 0.00543299 * T72turret_stab ) + (0.00676  * T72thermal_sights ) + (0.01311 * T72gps )) / 2
@@ -116,11 +112,6 @@ to setup-move
   set m1a1_move_speed 48000 / 3600 * scale_factor_x ;; get our move speed in m/s (will be 13.3m/s)
 end
 
-;to setup-engage
-;  ;; since we have a speed (48km/h, 13.33m/s * scale_factor_x), we can figure out the number of ticks it will take for an M1A1 to have moved for 3 seconds, roughly what McMaster recounts for the historical record on the shot time.
-;  set m1a1_shot_speed
-;end
-
 to go
   ;;sanity check and make sure somehow our tanks didn't all destroy each other
   if not any? t72s [ stop ]
@@ -136,11 +127,7 @@ to go
     ;;based on historical data the Iraqi Republican Guard tanks didn't move during the battle.
     t72engage
     death
-    ;;reproduce-t72s
   ]
-  ;reset all of our shots fired per tick variables
-  ;ask m1a1s [set fired 0]
-  ;ask t72s [set fired 0]
   tick
   clear-links ;; reset links so we can see missed shots (if we're looking...)
 end
@@ -213,23 +200,6 @@ to t72engage
       ]
 end
 
-
-
-
-;;to reproduce-t72s  ;; t72s procedure
-;;  if random-float 100 < t72s-reproduce [  ;; throw "dice" to see if you will reproduce
-;;   set energy (energy / 2)               ;; divide energy between parent and offspring
-;;    hatch 1 [ rt random-float 360 fd 1 ]  ;; hatch an offspring and move it forward 1 step
-;;  ]
-;;end
-
-;;to catch-m1a1s  ;; t72s procedure
-;;  let prey one-of m1a1s-here                    ;; grab a random m1a1s
-;;  if prey != nobody                             ;; did we get one?  if so,
-;;    [ ask prey [ die ]                          ;; kill it
-;;      set energy energy + t72s-gain-from-food ] ;; get energy from eating
-;;end
-
 to death  ;; turtle procedure
   ;;when energy dips below zero, die
   if hp <= 0 [ die ]
@@ -263,10 +233,6 @@ end
 ;; update-plots
 ;;  display-labels
 ;;end
-
-
-; Copyright 2005 Uri Wilensky.
-; See Info tab for full copyright and license.
 @#$#@#$#@
 GRAPHICS-WINDOW
 601
