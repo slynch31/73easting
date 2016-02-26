@@ -184,7 +184,7 @@ to t72engage
   [
     ifelse fired <= 0
     [
-      create-links-to t72targets [set color red]
+      create-link-to target [set color red]
       let targetrange [distance myself] of target / scale_factor_x
       show targetrange
       ;let targetrange 1500
@@ -503,7 +503,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-1450
+1121
 1
 1
 meters
@@ -528,7 +528,7 @@ T72_Thermal_Sights_Range
 T72_Thermal_Sights_Range
 50
 2000
-731
+1169
 1
 1
 meters
