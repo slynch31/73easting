@@ -138,6 +138,7 @@ to move
    ifelse M1A1_GPS = True
    [fd m1a1_move_speed]
    [rt (random 4 + random -4) fd m1a1_move_speed]
+   set fired fired - 1
     ;; this is how we're going to implement a slight drift in GPS
 end
 
@@ -152,7 +153,7 @@ to m1a1engage
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   if shoot = true
   [
-    ifelse fired <= 0
+    if fired <= 0
     [
       create-link-to target [set color blue] ;;show what units the M1A1s are engaging
       let targetrange [distance myself] of target / scale_factor_x
@@ -164,9 +165,9 @@ to m1a1engage
       show m1a1_shot
       if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
           [ask target [set hp hp - 1]]
-      ask m1a1s [set fired 3] ;
+      set fired 3 ;
     ]
-    [set fired fired - 1]
+
   ]
 end
 
