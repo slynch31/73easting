@@ -195,7 +195,7 @@ to t72engage
       set t72_shot random-float 1 ;;have a randomly distributed uniform [0,1].
       if t72_shot <= t72hitrate ;;check this random number against our hit probability...
           [ask target [set hp hp - 1]]
-      ask t72s [set fired 3]
+      set fired 3
     ]
       [set fired fired - 1]
       ]
