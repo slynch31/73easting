@@ -24,8 +24,8 @@ globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gp
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
-m1a1s-own [hp fired time_since_shot]       ;; both t72s and m1a1s have hit points
-t72s-own [hp fired time_since_shot]       ;; both t72s and m1a1s have hit points
+m1a1s-own [hp fired time_since_shot shot_at]       ;; both t72s and m1a1s have hit points
+t72s-own [hp fired time_since_shot shot_at]       ;; both t72s and m1a1s have hit points
 
 to setup
   clear-all
@@ -137,35 +137,45 @@ to move
    ;;first we'll do a GPS check...if the M1A1s have GPS they'll stay together and hopefully engage at all around the same time. if they don't have GPS, then they'll wander and who knows when they'll engage.
    ifelse M1A1_GPS = True
    [fd m1a1_move_speed]
-   [rt (random 4 + random -4) fd m1a1_move_speed]
-   set fired fired - 1
-    ;; this is how we're going to implement a slight drift in GPS
-end
+   [rt (random 4 + random -4) fd m1a1_move_speed] ;; this is how we'll end up drifting our tanks...roughly by a sum of +-4 degrees. this is probably a little extreme and we can change it later if need be.
+   set fired fired - 1 ;;go ahead and decrement the 'fired' variable
+   if fired <= 0
+   [
+     set label "Rolling..." ;;if we've been driving for a while print that status...we can edit this out later.
+   ]
+   ;set label fired ;;we can add this line back in if we want to see exactly how our tanks are waiting for their 'fire' command.
+   end
 
 to m1a1engage
   ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
   ;; convert our patches into distance...
   let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
-
   let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range
   let target min-one-of m1a1targets [distance myself] ;; engage the closest T72
   let shoot false
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   if shoot = true
   [
-    if fired <= 0
+    if fired <= 0 ;; add this catch all so our tanks can be ready to fire during this initial engagement (fired will be < 0)
     [
       create-link-to target [set color blue] ;;show what units the M1A1s are engaging
+      ask target [set shot_at TRUE] ;;the target has been engaged so the T-72s can shoot back... if they're in range...
       let targetrange [distance myself] of target / scale_factor_x
-      show targetrange
-      let cep (m1a1hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our cep
+      show targetrange ;;print the target range (for debug)
+      let cep (m1a1hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our circular error probability
       set m1a1hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our m1a1hitrate
-      show m1a1hitrate
+      show m1a1hitrate ;; print the hit rate (for debug)
       set m1a1_shot random-float 1 ;;have a randomly distributed uniform [0,1].
-      show m1a1_shot
-      if m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
-          [ask target [set hp hp - 1]]
-      set fired 3 ;
+      show m1a1_shot ;; print the randomly distributed uniform [0,1].
+      ifelse m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
+          [
+            ask target [set hp hp - 1 set label "Destroyed!"] ;; And destoy the target tank if we're <= that probability
+            set label "Fire!" ;; label the M1A1 that fired as such
+          ]
+          [
+            set label "Miss!" ;;else label the M1A1 that fired as having missed.
+          ]
+      set fired 3 ;; reset at the end of 3 move turns (set in the 'move' function) we're going to let our turtle fire again. this should 'slow down' the simulation.
     ]
 
   ]
@@ -177,19 +187,17 @@ to t72engage
   let t72max_engagement_range t72thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
   let target min-one-of t72targets [distance myself] ;; engage the closest M1A1
-  ;;TO DO - IF and ONLY IF we've already been fired on!
-  let shoot false
+  let shoot false ;;reset the check
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   ;;let targetrange distance target * scale_factor_x
-  if shoot = true
+  if shoot = true and shot_at = true
   [
-    ifelse fired <= 0
+    ifelse fired <= 0 ;; add in our time dependence for our T-72s, just based roughly on the M1A1 speed...might be a good idea to change this later.
     [
       create-link-to target [set color red]
-      let targetrange [distance myself] of target / scale_factor_x
-      show targetrange
-      ;let targetrange 1500
-      let cep (t72hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our cep
+      let targetrange [distance myself] of target / scale_factor_x ;; set the range based on patches
+      show targetrange ;; print the target range
+      let cep (t72hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our circular
       set t72hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our m1a1hitrate
       show t72hitrate
       set t72_shot random-float 1 ;;have a randomly distributed uniform [0,1].
@@ -414,7 +422,7 @@ SWITCH
 487
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -436,7 +444,7 @@ SWITCH
 560
 T72_Thermal_Sights
 T72_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -447,7 +455,7 @@ SWITCH
 633
 T72_Turret_Stablization
 T72_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -458,7 +466,7 @@ SWITCH
 670
 T72_GPS
 T72_GPS
-0
+1
 1
 -1000
 
@@ -504,7 +512,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-1121
+1661
 1
 1
 meters
