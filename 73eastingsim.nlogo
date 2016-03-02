@@ -7,6 +7,8 @@
 ;; Broadly - impact of technology
 ;; narrowly - invest in new technology/sights/etc
 ;; ==================END NOTES==================
+
+
 globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_move_speed m1a1_shot_speed desert ridgeline_x_meter]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
@@ -30,7 +32,8 @@ to setup-m1a1s
   let current-m1a1s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
   while [current-m1a1s <= (initial-number-m1a1 / 2)]
-  [ create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 set hp 1 ]
+  [
+    create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 set hp 1 ]
     create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + ((5 * current-m1a1s)) set heading 90 set hp 1 ]
     set current-m1a1s current-m1a1s + 1
   ]
@@ -46,7 +49,8 @@ to setup-t72s
   let current-t72s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
   while [current-t72s <= (initial-number-t72 / 2)]
-  [ create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 set hp 1]
+  [
+    create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 set hp 1]
     create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor + ((5 * current-t72s)) set heading 270 set hp 1]
     set current-t72s current-t72s + 1
   ]
@@ -54,7 +58,7 @@ to setup-t72s
   let initial-number-t72-mod initial-number-t72 - 1
   if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
   ;;create the front T-72
-  create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
+  create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
 end
 
 to setup-technology
@@ -132,7 +136,7 @@ to move
    ;;first we'll do a GPS check...if the M1A1s have GPS they'll stay together and hopefully engage at all around the same time. if they don't have GPS, then they'll wander and who knows when they'll engage.
    ifelse M1A1_GPS = True
    [fd m1a1_move_speed]
-   [rt (random 4 + random -4) fd m1a1_move_speed] ;; this is how we'll end up drifting our tanks...roughly by a sum of +-4 degrees. this is probably a little extreme and we can change it later if need be.
+   [rt (random-float 4 + random-float -4) fd m1a1_move_speed] ;; this is how we'll end up drifting our tanks...roughly by a sum of +-4 degrees. this is probably a little extreme and we can change it later if need be.
    set fired fired - 1 ;;go ahead and decrement the 'fired' variable
    if fired <= 0
    [
