@@ -9,7 +9,7 @@
 ;; ==================END NOTES==================
 
 
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_move_speed m1a1_shot_speed desert ridgeline_x_meter]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_move_speed m1a1_shot_speed desert ridgeline_x_meter t72target m1a1target]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
@@ -118,6 +118,7 @@ to go
   ask m1a1s
   [
     move
+    detect
     m1a1engage
     death
   ]
@@ -144,6 +145,48 @@ to move
    ]
    ;set label fired ;;we can add this line back in if we want to see exactly how our tanks are waiting for their 'fire' command.
    end
+
+;;TODO - Comment this code!
+to detect
+  ;;now we are going to create an code block to see if the gunner will see any enemy targets.
+  let m1a1targets t72s in-radius ( 2500 - ridgeline_x_meter ) ;;find any T-72s in visual range, changed to include ridge...)
+  let direction_of_view heading - 45 + random 90 ;;
+  let tank_x_pos xcor;;asign a variable for x cord of "your" tank
+  let tank_y_pos ycor;;assign a variable for y cord of "enemy" tank
+  let target_x_pos 0
+  let target_y_pos 0
+  let delta_x 0
+  let delta_y 0
+  let target_direction 0
+  let tau 0
+  let p_detection 0
+  let random_detect 0
+  ask m1a1targets
+  [set target_x_pos xcor
+   set target_y_pos ycor
+   set delta_x target_x_pos - tank_x_pos
+   set delta_y target_y_pos - tank_y_pos
+   set target_direction atan delta_x delta_y
+   ;;write "target direction" ;;removed this line as it was slowing down the simulation... too much information!
+   ;;show target_direction ;;removed this line as it was slowing down the simulation... too much information!
+     if direction_of_view - 9 < target_direction and direction_of_view + 9 > target_direction
+     [ ;write "range"
+       ;show distance turtle 1 / scale_factor_x / 1000
+       set tau 6.8 * 8 * distance turtle 1 / 14.85 / 2.93 / 1000 / scale_factor_x
+       ;write "tau ="
+       ;show tau
+       set p_detection 1 - exp (-30 / tau)
+       ;write "probability of detection"
+       ;show p_detection
+       set random_detect random 1
+       if random_detect <= p_detection
+       [
+        set t72target self
+        ;show t72target
+       ]
+     ]
+  ]
+  end
 
 to m1a1engage
   ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
