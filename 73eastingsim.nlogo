@@ -1,7 +1,6 @@
-;; INTA 4742/6742 CX4232 CSE6742
-;; Modeling, Simulation, and Military Gaming
-;; Austin Brooks, Michael Coulter, Caitlyn Huber, Scott Lynch, David Soll, Ashley Tofil
-;; Spring 2016
+;;INTA 4742/6742 CX4232 CSE6742
+;;
+;;Spring 2016
 ;;====================NOTES====================
 ;; =========Instructor Comments=========
 ;; =========Research Question=========
@@ -169,7 +168,6 @@ to m1a1engage
         show m1a1_shot ;; print the randomly distributed uniform [0,1].
         ifelse m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
           [
-            ;; TODO add in checking for shell type here...this could potentially change the outcome of the battle a lot.
             ask target [set hp hp - 1 set label "Destroyed!"] ;; And destoy the target tank if we're <= that probability
             set label "Fire!" ;; label the M1A1 that fired as such
           ]
@@ -206,7 +204,6 @@ to t72engage
       set t72_shot random-float 1 ;;have a randomly distributed uniform [0,1].
       if t72_shot <= t72hitrate ;;check this random number against our hit probability...
           [
-            ;TODO add in checking for shell type here...
             ask target [set hp hp - 1]
           ]
       set fired 3 ;;reset our fired for t72s.
@@ -730,10 +727,10 @@ Set the position of the lead US Army M1A1 and the lead Iraqi Republican Guard T-
 
 
 ## THINGS TO NOTICE
-The M1A1s will not fire on the T72s until they breach the ridge line. Likewise, the T72s will not fire upon the M1A1s until they are fired upon (per the historic battle)
+
 
 ## THINGS TO TRY
-Change the M1A1 thermal sights range. if this value is smaller than the value from the ridge line to the T72s, the M1A1s will not fire on the T72s as they crest the ridge as they did in the historic battle, but will advance forward until track a T72 with thermal sights and then engage.
+
 
 
 ## NETLOGO FEATURES
