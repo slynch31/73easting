@@ -54,7 +54,7 @@ to setup-t72s
   let initial-number-t72-mod initial-number-t72 - 1
   if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
   ;;create the front T-72
-  create-t72s 1 [set color green set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
+  create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
 end
 
 to setup-technology
