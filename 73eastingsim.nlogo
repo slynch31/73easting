@@ -386,12 +386,12 @@ NIL
 SLIDER
 13
 101
-202
+205
 134
 initial-number-m1a1
 initial-number-m1a1
 0
-50
+200
 13
 1
 1
@@ -406,8 +406,8 @@ SLIDER
 initial-number-t72
 initial-number-t72
 0
+200
 50
-25
 1
 1
 t72
@@ -802,7 +802,7 @@ t72-spacing
 t72-spacing
 0
 100
-22
+99
 1
 1
 NIL
@@ -1001,9 +1001,9 @@ Line -7500403 true 150 0 150 150
 
 m1a1
 true
-1
-Rectangle -13345367 true false 90 75 210 240
-Rectangle -13345367 true false 135 15 165 75
+10
+Rectangle -13345367 true true 135 135 180 180
+Rectangle -13345367 true true 150 120 165 135
 
 pentagon
 false
@@ -1058,9 +1058,9 @@ Polygon -7500403 true true 151 1 185 108 298 108 207 175 242 282 151 216 59 282 
 
 t72
 true
-1
-Rectangle -2674135 true true 90 75 210 240
-Rectangle -2674135 true true 135 15 165 75
+10
+Rectangle -13345367 true true 135 135 180 180
+Rectangle -13345367 true true 150 120 165 135
 
 target
 false
