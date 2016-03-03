@@ -29,7 +29,7 @@ end
 
 to setup-m1a1s
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
-  let m1a1-normalized-spacing (((m1a1-spacing / 100) * max-pycor) / initial-number-m1a1) ;;normalize our T72 spacing...
+  let m1a1-normalized-spacing (((m1a1-spacing / 100) * max-pycor) / initial-number-m1a1) ;;normalize our m1a1 spacing...
   let current-m1a1s initial-number-m1a1 ;;initialize counter
   ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
   while [current-m1a1s >= (0)]
@@ -261,7 +261,7 @@ to t72engage
   let shoot false ;;reset the check
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   ;;let targetrange distance target * scale_factor_x
-  if shoot = true and shot_at = true
+  if shoot = true
   [
     if fired <= 0 ;; add in our time dependence for our T-72s, just based roughly on the M1A1 speed...might be a good idea to change this later.
     [
@@ -484,7 +484,7 @@ SWITCH
 389
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -517,7 +517,7 @@ SWITCH
 603
 T72_Thermal_Sights
 T72_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -585,7 +585,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-984
+379
 1
 1
 meters
@@ -610,7 +610,7 @@ T72_Thermal_Sights_Range
 T72_Thermal_Sights_Range
 50
 2000
-1169
+2000
 1
 1
 meters
