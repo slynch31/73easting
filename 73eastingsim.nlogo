@@ -93,7 +93,7 @@ to setup-technology
        [set M1A1turret_stab 0]
       ifelse M1A1_Thermal_Sights = True
        [set M1A1thermal_sights 1 set M1A1thermal_sights_range M1A1_Thermal_Sights_Range] ;;1420 was the engagement ranged afforded to McMaster's M1A1 due to thermal sights from his front line account
-       [set M1A1thermal_sights 0 set M1A1thermal_sights_range 50] ;;assume an engagement range of 50m if we don't have thermal sights
+       [set M1A1thermal_sights 0 set M1A1thermal_sights_range desert-visibility] ;;assume an engagement range of 50m if we don't have thermal sights
       ifelse M1A1_GPS = True
        [set M1A1gps 1]
        [set M1A1gps 0]
@@ -102,7 +102,7 @@ to setup-technology
        [set T72turret_stab 0]
       ifelse T72_Thermal_Sights = True
        [set T72thermal_sights 1 set T72thermal_sights_range T72_Thermal_Sights_Range] ;;assume the Iraqi version to be 1/2 to 1/3 as good.
-       [set T72thermal_sights 0 set T72thermal_sights_range 50] ;;assume this is all you can see in a sandstorm...is this a good estimate?
+       [set T72thermal_sights 0 set T72thermal_sights_range desert-visibility] ;;assume this is all you can see in a sandstorm...is this a good estimate?
       ifelse T72_GPS = True
        [set T72gps 1]
        [set T72gps 0]
@@ -166,7 +166,7 @@ to move
    set fired fired - 1 ;;go ahead and decrement the 'fired' variable
    if fired <= 0
    [
-     set label "Rolling..." ;;if we've been driving for a while print that status...we can edit this out later.
+     ;set label "Rolling..." ;;if we've been driving for a while print that status...we can edit this out later.
    ]
    ;set label fired ;;we can add this line back in if we want to see exactly how our tanks are waiting for their 'fire' command.
    end
@@ -396,7 +396,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 200
-13
+200
 1
 1
 m1a1
@@ -411,7 +411,7 @@ initial-number-t72
 initial-number-t72
 0
 200
-50
+200
 1
 1
 t72
@@ -484,7 +484,7 @@ SWITCH
 389
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -495,7 +495,7 @@ SWITCH
 467
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -506,7 +506,7 @@ SWITCH
 504
 M1A1_GPS
 M1A1_GPS
-0
+1
 1
 -1000
 
@@ -517,7 +517,7 @@ SWITCH
 603
 T72_Thermal_Sights
 T72_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -585,7 +585,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-815
+984
 1
 1
 meters
@@ -814,28 +814,43 @@ HORIZONTAL
 
 SLIDER
 5
-506
+515
 177
-539
+548
 m1a1-spacing
 m1a1-spacing
 0
 100
-50
+100
 1
 1
 NIL
 HORIZONTAL
 
 CHOOSER
-339
-812
-477
-857
+125
+469
+263
+514
 m1a1-formation
 m1a1-formation
 "|" "<" ">" "backslash" "/"
 0
+
+SLIDER
+5
+898
+193
+931
+desert-visibility
+desert-visibility
+0
+20000
+9827
+1
+1
+meters
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
