@@ -62,8 +62,8 @@ to setup-m1a1s
     if m1a1-formation = "/"
     [
       ifelse current-m1a1s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-m1a1s 1 [set color blue set size 5 setxy (max-pxcor / 2 - (m1a1-normalized-spacing_x * current-m1a1s)) ( m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
-    [create-m1a1s 1 [set color blue set size 5 setxy (max-pxcor / 2 - (current-m1a1s * (-1 * m1a1-normalized-spacing_x))) (-1 * current-m1a1s * m1a1-normalized-spacing_y) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy (lead_m1a1_x_cor + m1a1-normalized-spacing_x * current-m1a1s) (lead_m1a1_y_cor + m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy (lead_m1a1_x_cor + (current-m1a1s * -1 * m1a1-normalized-spacing_x)) (lead_m1a1_y_cor + -1 * current-m1a1s * m1a1-normalized-spacing_y) set heading 90 set hp 1]]
     ]
 
     set current-m1a1s current-m1a1s - 1
@@ -105,14 +105,14 @@ to setup-t72s
     if t72-formation = "backslash"
     [
       ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 - t72-normalized-spacing_x * current-t72s * -1) (lead_t72_y_cor + t72-normalized-spacing_y * -1 * current-t72s) set heading 270 set hp 1]]
-    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + current-t72s * -1 * t72-normalized-spacing_x) (lead_t72_y_cor + current-t72s * t72-normalized-spacing_y) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (lead_t72_x_cor - t72-normalized-spacing_x * current-t72s * -1) (lead_t72_y_cor + t72-normalized-spacing_y * -1 * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (lead_t72_x_cor + current-t72s * -1 * t72-normalized-spacing_x) (lead_t72_y_cor + current-t72s * t72-normalized-spacing_y) set heading 270 set hp 1]]
     ]
     if t72-formation = "/"
     [
       ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + (t72-normalized-spacing_x * current-t72s)) ( t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
-    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + (current-t72s * (-1 * t72-normalized-spacing_x))) (-1 * current-t72s * t72-normalized-spacing_y) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (lead_t72_x_cor + (t72-normalized-spacing_x * current-t72s)) (lead_t72_y_cor + t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (lead_t72_x_cor + (current-t72s * -1 * t72-normalized-spacing_x)) (lead_t72_y_cor + -1 * current-t72s * t72-normalized-spacing_y) set heading 270 set hp 1]]
     ]
     set current-t72s current-t72s - 1
   ]
@@ -471,7 +471,7 @@ lead_m1a1_x_cor
 lead_m1a1_x_cor
 min-pxcor
 max-pxcor
--29
+-25
 1
 1
 NIL
@@ -486,7 +486,7 @@ lead_m1a1_y_cor
 lead_m1a1_y_cor
 min-pycor
 max-pycor
-3
+0
 1
 1
 NIL
@@ -501,7 +501,7 @@ lead_t72_x_cor
 lead_t72_x_cor
 min-pxcor
 max-pxcor
-3
+18
 1
 1
 NIL
@@ -516,7 +516,7 @@ lead_t72_y_cor
 lead_t72_y_cor
 min-pycor
 max-pycor
--15
+0
 1
 1
 NIL
@@ -529,7 +529,7 @@ SWITCH
 389
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -540,7 +540,7 @@ SWITCH
 467
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -551,7 +551,7 @@ SWITCH
 504
 M1A1_GPS
 M1A1_GPS
-0
+1
 1
 -1000
 
@@ -562,7 +562,7 @@ SWITCH
 603
 T72_Thermal_Sights
 T72_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -584,7 +584,7 @@ SWITCH
 713
 T72_GPS
 T72_GPS
-0
+1
 1
 -1000
 
@@ -670,7 +670,7 @@ Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
 10000
-5914
+7725
 1
 1
 meters
@@ -685,7 +685,7 @@ Desert_Height_In_Meters
 Desert_Height_In_Meters
 100
 10000
-5921
+7833
 1
 1
 meters
@@ -840,7 +840,7 @@ CHOOSER
 t72-formation
 t72-formation
 "|" "<" ">" "backslash" "/"
-3
+1
 
 SLIDER
 6
@@ -851,7 +851,7 @@ t72-spacing
 t72-spacing
 0
 100
-23
+37
 1
 1
 NIL
@@ -866,7 +866,7 @@ m1a1-spacing
 m1a1-spacing
 0
 100
-23
+24
 1
 1
 NIL
@@ -880,7 +880,7 @@ CHOOSER
 m1a1-formation
 m1a1-formation
 "|" "<" ">" "backslash" "/"
-3
+0
 
 SLIDER
 5
