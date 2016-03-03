@@ -9,7 +9,7 @@
 ;; ==================END NOTES==================
 
 
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_move_speed m1a1_shot_speed desert ridgeline_x_meter t72target m1a1target]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_move_speed m1a1_shot_speed desert ridgeline_x_meter t72target m1a1target crest]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
@@ -224,6 +224,7 @@ to m1a1engage
   let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage...assume our thermal sights are our max range.
   if xcor >= ridgeline_x_cor
   [
+    set crest 1 ;set this so our T72s know our M1A1s have crested the hill and can begin to engage if they can see them.
     let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range iff we're over the ridge line
     let target min-one-of m1a1targets [distance myself] ;; engage the closest T72
     let shoot false
@@ -266,7 +267,9 @@ to t72engage
   let shoot false ;;reset the check
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   ;;let targetrange distance target * scale_factor_x
-  if shoot = true
+  if (shoot = true)
+  [
+  if (crest = 1) ;;make sure our T72s can see their targets!
   [
     if fired <= 0 ;; add in our time dependence for our T-72s, just based roughly on the M1A1 speed...might be a good idea to change this later.
     [
@@ -283,7 +286,7 @@ to t72engage
           ]
       set fired 3 ;;reset our fired for t72s.
     ]
-
+  ]
   ]
 end
 
