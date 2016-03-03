@@ -77,9 +77,15 @@ to setup-t72s
     ]
     if t72-formation = "backslash"
     [
+      ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
+    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + t72-normalized-spacing * current-t72s) (t72-normalized-spacing *(-1 * current-t72s)) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + current-t72s * (-1 * t72-normalized-spacing)) (current-t72s * t72-normalized-spacing) set heading 270 set hp 1]]
     ]
     if t72-formation = "/"
     [
+      ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
+    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + (t72-normalized-spacing * current-t72s)) ( t72-normalized-spacing * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + (current-t72s * (-1 * t72-normalized-spacing))) (-1 * current-t72s * t72-normalized-spacing) set heading 270 set hp 1]]
     ]
 
     set current-t72s current-t72s - 1
@@ -409,7 +415,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 200
-38
+11
 1
 1
 m1a1
@@ -424,7 +430,7 @@ initial-number-t72
 initial-number-t72
 0
 200
-17
+38
 1
 1
 t72
@@ -808,7 +814,7 @@ CHOOSER
 t72-formation
 t72-formation
 "|" "<" ">" "backslash" "/"
-2
+4
 
 SLIDER
 6
