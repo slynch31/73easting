@@ -47,16 +47,17 @@ end
 to setup-t72s
   set-default-shape t72s "t72" ;; make t72s their own shape
   ;;for t72 spacing: we'll increase up to 2.5 patches the distance between T-72s.
-  let t72-normalized-spacing ((t72-spacing / 100) * 2.5)
-  let current-t72s 1 ;;initialize counter
+  let t72-normalized-spacing (((t72-spacing / 100) * max-pycor) / initial-number-t72)
+  let current-t72s initial-number-t72 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
-  while [current-t72s <= (initial-number-t72 - 1)]
+  while [current-t72s >= (0)]
   [
+
     if t72-formation = "|"
     [
       ifelse current-t72s mod 2 = 1
-    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (lead_t72_y_cor - ((t72-normalized-spacing * current-t72s))) set heading 270 set hp 1]]
-    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (lead_t72_y_cor + ((t72-normalized-spacing * current-t72s))) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (t72-normalized-spacing * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (current-t72s * (-1 * t72-normalized-spacing)) set heading 270 set hp 1]]
     ]
     if t72-formation = "<"
     [
@@ -72,13 +73,13 @@ to setup-t72s
     [
     ]
 
-    set current-t72s current-t72s + 1
+    set current-t72s current-t72s - 1
   ]
   ;;if we have an even number of T72s we need to make the line accordingly.
   ;let initial-number-t72-mod initial-number-t72 - 1
   ;if initial-number-t72 mod 2 = 0 [ask last t72 die ] ;; mod 2
   ;;create the front T-72
-  create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
+  create-t72s 1 [set color blue set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
 end
 
 to setup-technology
@@ -406,7 +407,7 @@ initial-number-t72
 initial-number-t72
 0
 50
-12
+25
 1
 1
 t72
@@ -612,10 +613,10 @@ meters
 HORIZONTAL
 
 SLIDER
-1
-697
-251
-730
+3
+749
+253
+782
 Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
@@ -627,10 +628,10 @@ meters
 HORIZONTAL
 
 SLIDER
-1
-732
-249
-765
+3
+784
+251
+817
 Desert_Height_In_Meters
 Desert_Height_In_Meters
 100
@@ -683,10 +684,10 @@ PENS
 "pen-1" 1.0 0 -2674135 true "" "plot count t72s"
 
 TEXTBOX
-5
-678
-155
-696
+7
+730
+157
+748
 Desert Setup
 11
 0.0
@@ -757,10 +758,10 @@ max-pxcor / scale_factor_x
 11
 
 SLIDER
-1
-770
-173
-803
+3
+822
+175
+855
 ridgeline_x_cor
 ridgeline_x_cor
 min-pxcor
@@ -793,15 +794,15 @@ t72-formation
 0
 
 SLIDER
-84
-929
-256
-962
+3
+693
+175
+726
 t72-spacing
 t72-spacing
 0
 100
-50
+22
 1
 1
 NIL
