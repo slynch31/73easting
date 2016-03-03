@@ -236,12 +236,12 @@ to m1a1engage
         create-link-to target [set color blue] ;;show what units the M1A1s are engaging
         ask target [set shot_at TRUE] ;;the target has been engaged so the T-72s can shoot back... if they're in range...
         let targetrange [distance myself] of target / scale_factor_x
-        show targetrange ;;print the target range (for debug)
+        ;show targetrange ;;print the target range (for debug)
         let cep (m1a1hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our circular error probability
         set m1a1hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our m1a1hitrate
-        show m1a1hitrate ;; print the hit rate (for debug)
+        ;show m1a1hitrate ;; print the hit rate (for debug)
         set m1a1_shot random-float 1 ;;have a randomly distributed uniform [0,1].
-        show m1a1_shot ;; print the randomly distributed uniform [0,1].
+        ;show m1a1_shot ;; print the randomly distributed uniform [0,1].
         ifelse m1a1_shot <= m1a1hitrate ;;check this random number against our hit probability...
           [
             ask target [set hp hp - 1 set label "Destroyed!"] ;; And destoy the target tank if we're <= that probability
@@ -269,16 +269,16 @@ to t72engage
   ;;let targetrange distance target * scale_factor_x
   if (shoot = true)
   [
-  if (crest = 1) ;;make sure our T72s can see their targets!
+  if ( crest = 1) ;;make sure our T72s can see their targets!
   [
     if fired <= 0 ;; add in our time dependence for our T-72s, just based roughly on the M1A1 speed...might be a good idea to change this later.
     [
       create-link-to target [set color red] ;;create a red link to M1A1s
       let targetrange [distance myself] of target / scale_factor_x ;; set the range based on patches
-      show targetrange ;; print the target range
+      ;show targetrange ;; print the target range
       let cep (t72hitadjust * 36 - 35 * exp (-1 * targetrange / 9000)) ;; adjust our circular
       set t72hitrate (1 - exp (-.693147 * 100 / (cep * cep))) ;;adjust our T72hitrate
-      show t72hitrate ;;debug print
+      ;show t72hitrate ;;debug print
       set t72_shot random-float 1 ;;have a randomly distributed uniform [0,1].
       if t72_shot <= t72hitrate ;;check this random number against our hit probability...
           [
