@@ -32,7 +32,7 @@ to setup-m1a1s
   let m1a1-normalized-spacing (((m1a1-spacing / 100) * max-pycor) / initial-number-m1a1) ;;normalize our m1a1 spacing...
   let current-m1a1s initial-number-m1a1 ;;initialize counter
   ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
-  while [current-m1a1s >= (0)]
+  while [current-m1a1s >= (1)]
   [
     if m1a1-formation = "|"
     [
@@ -43,10 +43,10 @@ to setup-m1a1s
     set current-m1a1s current-m1a1s - 1
   ]
   ;;if we have an even number of M1A1s we need to make the line accordingly.
-  let initial-number-m1a1-mod initial-number-m1a1 - 1
-  if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
+  ;let initial-number-m1a1-mod initial-number-m1a1 - 1
+  ;if initial-number-m1a1 mod 2 = 0 [ask m1a1 initial-number-m1a1-mod [die] ] ;; mod 2
   ;;create the LEAD m1a1
-  create-m1a1s 1 [set color sky set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90 set hp 1]
+  ;create-m1a1s 1 [set color sky set size 5 setxy lead_m1a1_x_cor lead_m1a1_y_cor set heading 90 set hp 1]
 end
 
 to setup-t72s
@@ -55,7 +55,7 @@ to setup-t72s
   let t72-normalized-spacing (((t72-spacing / 100) * max-pycor) / initial-number-t72) ;;normalize our T72 spacing...
   let current-t72s initial-number-t72 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
-  while [current-t72s >= (0)]
+  while [current-t72s >= (1)]
   [
     if t72-formation = "|"
     [
@@ -87,14 +87,13 @@ to setup-t72s
     [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + (t72-normalized-spacing * current-t72s)) ( t72-normalized-spacing * current-t72s) set heading 270 set hp 1]]
     [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + (current-t72s * (-1 * t72-normalized-spacing))) (-1 * current-t72s * t72-normalized-spacing) set heading 270 set hp 1]]
     ]
-
     set current-t72s current-t72s - 1
   ]
   ;;if we have an even number of T72s we need to make the line accordingly.
   ;let initial-number-t72-mod initial-number-t72 - 1
   ;if initial-number-t72 mod 2 = 0 [ask last t72 die ] ;; mod 2
   ;;create the front T-72
-  create-t72s 1 [set color blue set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
+  ;create-t72s 1 [set color blue set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
 end
 
 to setup-technology
@@ -430,7 +429,7 @@ initial-number-t72
 initial-number-t72
 0
 200
-38
+5
 1
 1
 t72
