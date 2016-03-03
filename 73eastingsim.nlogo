@@ -29,8 +29,8 @@ end
 
 to setup-m1a1s
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
-  let m1a1-normalized-spacing_x (((m1a1-spacing / 100) * ( max-pxcor - 1 - lead_m1a1_x_cor) / initial-number-m1a1)) ;;normalize our m1a1 spacing...
-  let m1a1-normalized-spacing_y (((m1a1-spacing / 100) * ( max-pycor - 1 - lead_m1a1_y_cor) / initial-number-m1a1)) ;;normalize our m1a1 spacing...
+  let m1a1-normalized-spacing_x ((m1a1-spacing / 100) * ( max-pxcor)) / initial-number-m1a1 ;;normalize our m1a1 spacing...
+  let m1a1-normalized-spacing_y ((m1a1-spacing / 100) * ( max-pycor)) / initial-number-m1a1 ;;normalize our m1a1 spacing...
   let current-m1a1s initial-number-m1a1 ;;initialize counter
   ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
   while [current-m1a1s >= (1)]
@@ -44,20 +44,20 @@ to setup-m1a1s
     if m1a1-formation = "<"
     [
       ifelse current-m1a1s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-m1a1s 1 [set color blue set size 5 setxy (m1a1-normalized-spacing_x * current-m1a1s) (m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
-    [create-m1a1s 1 [set color blue set size 5 setxy (-1 * current-m1a1s * (-1 * m1a1-normalized-spacing_x)) (current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy (lead_m1a1_x_cor + m1a1-normalized-spacing_x * current-m1a1s) (lead_m1a1_y_cor - m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy (lead_m1a1_x_cor + -1 * current-m1a1s * (-1 * m1a1-normalized-spacing_x)) (lead_m1a1_y_cor - current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
     ]
     if m1a1-formation = ">"
     [
       ifelse current-m1a1s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-m1a1s 1 [set color blue set size 5 setxy (max-pxcor - -1 * m1a1-normalized-spacing_x * current-m1a1s) (m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
-    [create-m1a1s 1 [set color blue set size 5 setxy (max-pxcor - current-m1a1s * (-1 * m1a1-normalized-spacing_x)) (current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy (lead_m1a1_x_cor + -1 * m1a1-normalized-spacing_x * current-m1a1s) (lead_m1a1_y_cor - m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy (lead_m1a1_x_cor + current-m1a1s * (-1 * m1a1-normalized-spacing_x)) (lead_m1a1_y_cor - current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
     ]
     if m1a1-formation = "backslash"
     [
       ifelse current-m1a1s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-m1a1s 1 [set color blue set size 5 setxy (max-pxcor / 2 - m1a1-normalized-spacing_x * current-m1a1s) (m1a1-normalized-spacing_y *(-1 * current-m1a1s)) set heading 90 set hp 1]]
-    [create-m1a1s 1 [set color blue set size 5 setxy (max-pxcor / 2 - current-m1a1s * (-1 * m1a1-normalized-spacing_x)) (current-m1a1s * m1a1-normalized-spacing_y) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy (lead_m1a1_x_cor - m1a1-normalized-spacing_x * current-m1a1s * -1) (lead_m1a1_y_cor - m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy (lead_m1a1_x_cor + -1 * current-m1a1s * m1a1-normalized-spacing_x) (lead_m1a1_y_cor - current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
     ]
     if m1a1-formation = "/"
     [
@@ -78,8 +78,8 @@ end
 to setup-t72s
   set-default-shape t72s "t72" ;; make t72s their own shape
   ;;for t72 spacing: we'll increase up to 2.5 patches the distance between T-72s.
-  let t72-normalized-spacing_x (((t72-spacing / 100) * ( max-pxcor - 1 - lead_t72_x_cor)) / initial-number-t72) ;;normalize our T72 spacing...
-  let t72-normalized-spacing_y (((t72-spacing / 100) * ( max-pycor - 1 - lead_t72_y_cor)) / initial-number-t72) ;;normalize our T72 spacing...
+  let t72-normalized-spacing_x ((t72-spacing / 100) * ( max-pxcor) / initial-number-t72) ;;normalize our T72 spacing...
+  let t72-normalized-spacing_y ((t72-spacing / 100) * ( max-pycor) / initial-number-t72) ;;normalize our T72 spacing...
   let current-t72s initial-number-t72 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
   while [current-t72s >= (1)]
@@ -93,20 +93,20 @@ to setup-t72s
     if t72-formation = "<"
     [
       ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-t72s 1 [set color red set size 5 setxy (t72-normalized-spacing_x * current-t72s) (t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
-    [create-t72s 1 [set color red set size 5 setxy (-1 * current-t72s * (-1 * t72-normalized-spacing_x)) (current-t72s * (-1 * t72-normalized-spacing_y)) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (lead_t72_x_cor + t72-normalized-spacing_x * current-t72s) (lead_t72_y_cor - t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (lead_t72_x_cor + -1 * current-t72s * (-1 * t72-normalized-spacing_x)) (lead_t72_y_cor - current-t72s * (-1 * t72-normalized-spacing_y)) set heading 270 set hp 1]]
     ]
     if t72-formation = ">"
     [
       ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-t72s 1 [set color red set size 5 setxy (max-pxcor + -1 * t72-normalized-spacing_x * current-t72s) (t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
-    [create-t72s 1 [set color red set size 5 setxy (max-pxcor + current-t72s * (-1 * t72-normalized-spacing_x)) (current-t72s * (-1 * t72-normalized-spacing_y)) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (lead_t72_x_cor + -1 * t72-normalized-spacing_x * current-t72s) (lead_t72_y_cor - t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (lead_t72_x_cor + current-t72s * (-1 * t72-normalized-spacing_x)) (lead_t72_y_cor - current-t72s * (-1 * t72-normalized-spacing_y)) set heading 270 set hp 1]]
     ]
     if t72-formation = "backslash"
     [
       ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 - t72-normalized-spacing_x * current-t72s * -1) (t72-normalized-spacing_y * -1 * current-t72s)) set heading 270 set hp 1]]
-    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + current-t72s * -1 * t72-normalized-spacing_x) (current-t72s * t72-normalized-spacing_y) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 - t72-normalized-spacing_x * current-t72s * -1) (lead_t72_y_cor + t72-normalized-spacing_y * -1 * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (max-pxcor / 2 + current-t72s * -1 * t72-normalized-spacing_x) (lead_t72_y_cor + current-t72s * t72-normalized-spacing_y) set heading 270 set hp 1]]
     ]
     if t72-formation = "/"
     [
@@ -441,7 +441,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 200
-63
+28
 1
 1
 m1a1
@@ -456,7 +456,7 @@ initial-number-t72
 initial-number-t72
 0
 200
-1
+28
 1
 1
 t72
@@ -471,7 +471,7 @@ lead_m1a1_x_cor
 lead_m1a1_x_cor
 min-pxcor
 max-pxcor
--40
+-29
 1
 1
 NIL
@@ -501,7 +501,7 @@ lead_t72_x_cor
 lead_t72_x_cor
 min-pxcor
 max-pxcor
-15
+3
 1
 1
 NIL
@@ -516,7 +516,7 @@ lead_t72_y_cor
 lead_t72_y_cor
 min-pycor
 max-pycor
--1
+-15
 1
 1
 NIL
@@ -851,7 +851,7 @@ t72-spacing
 t72-spacing
 0
 100
-100
+23
 1
 1
 NIL
@@ -866,7 +866,7 @@ m1a1-spacing
 m1a1-spacing
 0
 100
-100
+23
 1
 1
 NIL
@@ -880,7 +880,7 @@ CHOOSER
 m1a1-formation
 m1a1-formation
 "|" "<" ">" "backslash" "/"
-0
+3
 
 SLIDER
 5
