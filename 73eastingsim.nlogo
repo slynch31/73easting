@@ -29,13 +29,18 @@ end
 
 to setup-m1a1s
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
-  let current-m1a1s 1 ;;initialize counter
+  let m1a1-normalized-spacing (((m1a1-spacing / 100) * max-pycor) / initial-number-m1a1) ;;normalize our T72 spacing...
+  let current-m1a1s initial-number-m1a1 ;;initialize counter
   ;;initailize loop and let it: create n number of m1a1s with size 5, color blue, facing EAST and in a line, increment counter
-  while [current-m1a1s <= (initial-number-m1a1 / 2)]
+  while [current-m1a1s >= (0)]
   [
-    create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor - ((5 * current-m1a1s)) set heading 90 set hp 1 ]
-    create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 lead_m1a1_y_cor + ((5 * current-m1a1s)) set heading 90 set hp 1 ]
-    set current-m1a1s current-m1a1s + 1
+    if m1a1-formation = "|"
+    [
+      ifelse current-m1a1s mod 2 = 1
+    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 (m1a1-normalized-spacing * current-m1a1s) set heading 90 set hp 1 ]]
+    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor - 2.5 (current-m1a1s * (-1 * m1a1-normalized-spacing)) set heading 90 set hp 1 ]]
+    ]
+    set current-m1a1s current-m1a1s - 1
   ]
   ;;if we have an even number of M1A1s we need to make the line accordingly.
   let initial-number-m1a1-mod initial-number-m1a1 - 1
@@ -47,12 +52,11 @@ end
 to setup-t72s
   set-default-shape t72s "t72" ;; make t72s their own shape
   ;;for t72 spacing: we'll increase up to 2.5 patches the distance between T-72s.
-  let t72-normalized-spacing (((t72-spacing / 100) * max-pycor) / initial-number-t72)
+  let t72-normalized-spacing (((t72-spacing / 100) * max-pycor) / initial-number-t72) ;;normalize our T72 spacing...
   let current-t72s initial-number-t72 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
   while [current-t72s >= (0)]
   [
-
     if t72-formation = "|"
     [
       ifelse current-t72s mod 2 = 1
@@ -507,10 +511,10 @@ M1A1_GPS
 -1000
 
 SWITCH
-1
-532
-168
-565
+4
+570
+171
+603
 T72_Thermal_Sights
 T72_Thermal_Sights
 0
@@ -518,10 +522,10 @@ T72_Thermal_Sights
 -1000
 
 SWITCH
-2
-605
-197
-638
+5
+643
+200
+676
 T72_Turret_Stablization
 T72_Turret_Stablization
 0
@@ -529,10 +533,10 @@ T72_Turret_Stablization
 -1000
 
 SWITCH
-3
-642
-108
-675
+6
+680
+111
+713
 T72_GPS
 T72_GPS
 0
@@ -598,10 +602,10 @@ Computed Values from Simulation
 1
 
 SLIDER
-3
-568
-255
-601
+6
+606
+258
+639
 T72_Thermal_Sights_Range
 T72_Thermal_Sights_Range
 50
@@ -613,10 +617,10 @@ meters
 HORIZONTAL
 
 SLIDER
-3
-749
-253
-782
+6
+787
+256
+820
 Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
@@ -628,10 +632,10 @@ meters
 HORIZONTAL
 
 SLIDER
-3
-784
-251
-817
+6
+822
+254
+855
 Desert_Height_In_Meters
 Desert_Height_In_Meters
 100
@@ -684,20 +688,20 @@ PENS
 "pen-1" 1.0 0 -2674135 true "" "plot count t72s"
 
 TEXTBOX
-7
-730
-157
-748
+10
+768
+160
+786
 Desert Setup
 11
 0.0
 1
 
 TEXTBOX
-7
-511
-157
-529
+10
+549
+160
+567
 T-72 Setup
 11
 0.0
@@ -758,10 +762,10 @@ max-pxcor / scale_factor_x
 11
 
 SLIDER
-3
-822
-175
-855
+6
+860
+178
+893
 ridgeline_x_cor
 ridgeline_x_cor
 min-pxcor
@@ -784,20 +788,20 @@ ridgeline_x_meter
 11
 
 CHOOSER
-110
-644
-248
-689
+113
+682
+251
+727
 t72-formation
 t72-formation
 "|" "<" ">" "backslash" "/"
 0
 
 SLIDER
-3
-693
-175
-726
+6
+731
+178
+764
 t72-spacing
 t72-spacing
 0
@@ -807,6 +811,31 @@ t72-spacing
 1
 NIL
 HORIZONTAL
+
+SLIDER
+5
+506
+177
+539
+m1a1-spacing
+m1a1-spacing
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
+CHOOSER
+339
+812
+477
+857
+m1a1-formation
+m1a1-formation
+"|" "<" ">" "backslash" "/"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
