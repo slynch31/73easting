@@ -50,8 +50,24 @@ to setup-t72s
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
   while [current-t72s <= (initial-number-t72 / 2)]
   [
+    if t72-formation = "|"
+    [
     create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 set hp 1]
     create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor + ((5 * current-t72s)) set heading 270 set hp 1]
+    ]
+    if t72-formation = "<"
+    [
+    ]
+    if t72-formation = ">"
+    [
+    ]
+    if t72-formation = "backslash"
+    [
+    ]
+    if t72-formation = "/"
+    [
+    ]
+
     set current-t72s current-t72s + 1
   ]
   ;;if we have an even number of T72s we need to make the line accordingly.
@@ -761,6 +777,16 @@ ridgeline_x_meter
 17
 1
 11
+
+CHOOSER
+110
+644
+248
+689
+t72-formation
+t72-formation
+"|" "<" ">" "backslash" "/"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
