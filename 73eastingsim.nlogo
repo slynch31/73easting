@@ -46,17 +46,21 @@ end
 
 to setup-t72s
   set-default-shape t72s "t72" ;; make t72s their own shape
+  ;;for t72 spacing: we'll increase up to 2.5 patches the distance between T-72s.
+  let t72-normalized-spacing ((t72-spacing / 100) * 2.5)
   let current-t72s 1 ;;initialize counter
   ;;initailize loop and let it: create n number of t72s with size 5, color blue, facing WEST and in a line, increment counter
-  while [current-t72s <= (initial-number-t72 / 2)]
+  while [current-t72s <= (initial-number-t72 - 1)]
   [
     if t72-formation = "|"
     [
-    create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor - ((5 * current-t72s)) set heading 270 set hp 1]
-    create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + 2.5 lead_t72_y_cor + ((5 * current-t72s)) set heading 270 set hp 1]
+      ifelse current-t72s mod 2 = 1
+    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (lead_t72_y_cor - ((t72-normalized-spacing * current-t72s))) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (lead_t72_y_cor + ((t72-normalized-spacing * current-t72s))) set heading 270 set hp 1]]
     ]
     if t72-formation = "<"
     [
+    ;create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + (1.5 * current-t72s) lead_t72_y_cor - ((5 * current-t72s)) set heading 270 set hp 1]
     ]
     if t72-formation = ">"
     [
@@ -71,8 +75,8 @@ to setup-t72s
     set current-t72s current-t72s + 1
   ]
   ;;if we have an even number of T72s we need to make the line accordingly.
-  let initial-number-t72-mod initial-number-t72 - 1
-  if initial-number-t72 mod 2 = 0 [ask t72 initial-number-t72-mod [die] ] ;; mod 2
+  ;let initial-number-t72-mod initial-number-t72 - 1
+  ;if initial-number-t72 mod 2 = 0 [ask last t72 die ] ;; mod 2
   ;;create the front T-72
   create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
 end
@@ -387,7 +391,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 50
-9
+13
 1
 1
 m1a1
@@ -402,7 +406,7 @@ initial-number-t72
 initial-number-t72
 0
 50
-17
+12
 1
 1
 t72
@@ -787,6 +791,21 @@ t72-formation
 t72-formation
 "|" "<" ">" "backslash" "/"
 0
+
+SLIDER
+84
+929
+256
+962
+t72-spacing
+t72-spacing
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
