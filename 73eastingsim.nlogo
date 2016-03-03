@@ -197,7 +197,12 @@ to detect
      if direction_of_view - 9 < target_direction and direction_of_view + 9 > target_direction
      [ ;write "range"
        ;show distance turtle 1 / scale_factor_x / 1000
-       set tau 6.8 * 8 * distance turtle 1 / 14.85 / 2.93 / 1000 / scale_factor_x
+       ;; TODO
+       ;;add in carefully here to suppress error where there's nothing to aim at...
+       carefully
+       [set tau 6.8 * 8 * distance turtle 1 / 14.85 / 2.93 / 1000 / scale_factor_x]
+       [set tau 1] ;;set tau to one to prevent divide by zero errors.
+       ;;need to fix this before final commit!
        ;write "tau ="
        ;show tau
        set p_detection 1 - exp (-30 / tau)
