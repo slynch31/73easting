@@ -59,16 +59,21 @@ to setup-t72s
   [
     if t72-formation = "|"
     [
-      ifelse current-t72s mod 2 = 1
+      ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
     [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (t72-normalized-spacing * current-t72s) set heading 270 set hp 1]]
     [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (current-t72s * (-1 * t72-normalized-spacing)) set heading 270 set hp 1]]
     ]
     if t72-formation = "<"
     [
-    ;create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor + (1.5 * current-t72s) lead_t72_y_cor - ((5 * current-t72s)) set heading 270 set hp 1]
+      ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
+    [create-t72s 1 [set color red set size 5 setxy (t72-normalized-spacing * current-t72s) (t72-normalized-spacing * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (-1 * current-t72s * (-1 * t72-normalized-spacing)) (current-t72s * (-1 * t72-normalized-spacing)) set heading 270 set hp 1]]
     ]
     if t72-formation = ">"
     [
+      ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
+    [create-t72s 1 [set color red set size 5 setxy (max-pxcor + -1 * t72-normalized-spacing * current-t72s) (t72-normalized-spacing * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy (max-pxcor + current-t72s * (-1 * t72-normalized-spacing)) (current-t72s * (-1 * t72-normalized-spacing)) set heading 270 set hp 1]]
     ]
     if t72-formation = "backslash"
     [
@@ -404,7 +409,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 200
-200
+38
 1
 1
 m1a1
@@ -419,7 +424,7 @@ initial-number-t72
 initial-number-t72
 0
 200
-200
+17
 1
 1
 t72
@@ -434,7 +439,7 @@ lead_m1a1_x_cor
 lead_m1a1_x_cor
 min-pxcor
 max-pxcor
--20
+-29
 1
 1
 NIL
@@ -464,7 +469,7 @@ lead_t72_x_cor
 lead_t72_x_cor
 min-pxcor
 max-pxcor
-21
+35
 1
 1
 NIL
@@ -503,7 +508,7 @@ SWITCH
 467
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -514,7 +519,7 @@ SWITCH
 504
 M1A1_GPS
 M1A1_GPS
-1
+0
 1
 -1000
 
@@ -593,7 +598,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-379
+2000
 1
 1
 meters
@@ -633,7 +638,7 @@ Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
 10000
-2000
+5914
 1
 1
 meters
@@ -648,7 +653,7 @@ Desert_Height_In_Meters
 Desert_Height_In_Meters
 100
 10000
-2000
+5921
 1
 1
 meters
@@ -803,7 +808,7 @@ CHOOSER
 t72-formation
 t72-formation
 "|" "<" ">" "backslash" "/"
-0
+2
 
 SLIDER
 6
@@ -814,7 +819,7 @@ t72-spacing
 t72-spacing
 0
 100
-99
+39
 1
 1
 NIL
@@ -829,7 +834,7 @@ m1a1-spacing
 m1a1-spacing
 0
 100
-100
+54
 1
 1
 NIL
@@ -854,7 +859,7 @@ desert-visibility
 desert-visibility
 0
 20000
-9827
+20000
 1
 1
 meters
