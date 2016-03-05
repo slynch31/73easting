@@ -9,12 +9,12 @@
 ;; ==================END NOTES==================
 
 
-globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_move_speed m1a1_shot_speed desert ridgeline_x_meter t72target m1a1target crest]  ;; Assume sand is flat after a point...
+globals [sand M1A1turret_stab M1A1thermal_sights M1A1thermal_sights_range M1A1gps T72turret_stab T72thermal_sights T72gps m1a1hitrate t72hitrate T72thermal_sights_range scale_factor_x scale_factor_y t72_shot m1a1_shot m1a1hitadjust t72hitadjust m1a1_move_speed m1a1_shot_speed desert ridgeline_x_meter t72target m1a1target ]  ;; Assume sand is flat after a point...
 breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
-m1a1s-own [hp fired time_since_shot shot_at]       ;; both t72s and m1a1s have hit points
-t72s-own [hp fired time_since_shot shot_at]       ;; both t72s and m1a1s have hit points
+m1a1s-own [hp fired time_since_shot shot_at crest]       ;; both t72s and m1a1s have hit points
+t72s-own [hp fired time_since_shot shot_at crest]       ;; both t72s and m1a1s have hit points
 
 to setup
   clear-all
@@ -201,10 +201,10 @@ to move
    [fd m1a1_move_speed]
    [rt (random-float 4 + random-float -4) fd m1a1_move_speed] ;; this is how we'll end up drifting our tanks...roughly by a sum of +-4 degrees. this is probably a little extreme and we can change it later if need be.
    set fired fired - 1 ;;go ahead and decrement the 'fired' variable
-   if fired <= 0
-   [
+   ;if fired <= 0
+   ;[
      ;set label "Rolling..." ;;if we've been driving for a while print that status...we can edit this out later.
-   ]
+   ;]
    ;set label fired ;;we can add this line back in if we want to see exactly how our tanks are waiting for their 'fire' command.
    end
 
@@ -306,8 +306,7 @@ to t72engage
   ;;let targetrange distance target * scale_factor_x
   if (shoot = true)
   [
-  if ( crest = 1) ;;make sure our T72s can see their targets!
-  [
+    ;if (m1a1 [target] xcor > = 8
     if fired <= 0 ;; add in our time dependence for our T-72s, just based roughly on the M1A1 speed...might be a good idea to change this later.
     [
       create-link-to target [set color red] ;;create a red link to M1A1s
@@ -323,7 +322,6 @@ to t72engage
           ]
       set fired 3 ;;reset our fired for t72s.
     ]
-  ]
   ]
 end
 
@@ -540,7 +538,7 @@ SWITCH
 467
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
-1
+0
 1
 -1000
 
@@ -551,7 +549,7 @@ SWITCH
 504
 M1A1_GPS
 M1A1_GPS
-1
+0
 1
 -1000
 
@@ -891,7 +889,7 @@ desert-visibility
 desert-visibility
 0
 20000
-20000
+10520
 1
 1
 meters
