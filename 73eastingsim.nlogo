@@ -14,7 +14,7 @@ breed [m1a1s m1a1] ;; US Army M1A1
 breed [t72s t72] ;; Iraqi Republican Guard T-72
 
 m1a1s-own [hp fired time_since_shot shot_at crest]       ;; both t72s and m1a1s have hit points
-t72s-own [hp fired time_since_shot shot_at crest]       ;; both t72s and m1a1s have hit points
+t72s-own [hp fired time_since_shot shot_at]    ;; both t72s and m1a1s have hit points
 
 to setup
   clear-all
@@ -201,11 +201,10 @@ to move
    [fd m1a1_move_speed]
    [rt (random-float 4 + random-float -4) fd m1a1_move_speed] ;; this is how we'll end up drifting our tanks...roughly by a sum of +-4 degrees. this is probably a little extreme and we can change it later if need be.
    set fired fired - 1 ;;go ahead and decrement the 'fired' variable
-   ;if fired <= 0
-   ;[
-     ;set label "Rolling..." ;;if we've been driving for a while print that status...we can edit this out later.
-   ;]
-   ;set label fired ;;we can add this line back in if we want to see exactly how our tanks are waiting for their 'fire' command.
+   if pxcor >= ridgeline_x_cor
+   [
+   set crest 1 ;; set our crest variable if they've gone over the hill
+   ]
    end
 
 ;;TODO - Comment this code!
@@ -259,9 +258,8 @@ to m1a1engage
   ;; now we're going to check to see if our enemy T-72s are within our range (defined by M1A1thermal_sights_range) and if they are, use our m1a1hitrate probability to attempt to him them.
   ;; convert our patches into distance...
   let m1a1max_engagement_range M1A1thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage...assume our thermal sights are our max range.
-  if xcor >= ridgeline_x_cor
+  if crest = 1
   [
-    set crest 1 ;set this so our T72s know our M1A1s have crested the hill and can begin to engage if they can see them.
     let m1a1targets t72s in-radius m1a1max_engagement_range ;;find any T-72s in our max engagement range iff we're over the ridge line
     let target min-one-of m1a1targets [distance myself] ;; engage the closest T72
     let shoot false
@@ -301,12 +299,14 @@ to t72engage
   let t72max_engagement_range t72thermal_sights_range * scale_factor_x ;; set the farthest away patch the M1A1s can engage
   let t72targets m1a1s in-radius t72max_engagement_range ;;find any T-72s in our max engagement range
   let target min-one-of t72targets [distance myself] ;; engage the closest M1A1
+  ;if target xcor >= ridgeline_x_cor
   let shoot false ;;reset the check
   if target != nobody [ set shoot true ] ;;if there's somebody in range
   ;;let targetrange distance target * scale_factor_x
   if (shoot = true)
   [
-    ;if (m1a1 [target] xcor > = 8
+   if [crest] of target = 1
+   [
     if fired <= 0 ;; add in our time dependence for our T-72s, just based roughly on the M1A1 speed...might be a good idea to change this later.
     [
       create-link-to target [set color red] ;;create a red link to M1A1s
@@ -321,6 +321,7 @@ to t72engage
             ask target [set hp hp - 1]
           ]
       set fired 3 ;;reset our fired for t72s.
+    ]
     ]
   ]
 end
@@ -454,7 +455,7 @@ initial-number-t72
 initial-number-t72
 0
 200
-28
+36
 1
 1
 t72
@@ -560,7 +561,7 @@ SWITCH
 603
 T72_Thermal_Sights
 T72_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -582,7 +583,7 @@ SWITCH
 713
 T72_GPS
 T72_GPS
-1
+0
 1
 -1000
 
@@ -628,7 +629,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-2000
+1999
 1
 1
 meters
@@ -838,7 +839,7 @@ CHOOSER
 t72-formation
 t72-formation
 "|" "<" ">" "backslash" "/"
-1
+0
 
 SLIDER
 6
@@ -889,7 +890,7 @@ desert-visibility
 desert-visibility
 0
 20000
-10520
+231
 1
 1
 meters
