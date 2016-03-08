@@ -38,6 +38,7 @@ to reset
   set extra-t72s true
 
 
+
   end
 
 
@@ -393,10 +394,10 @@ end
 GRAPHICS-WINDOW
 601
 10
-1421
-851
-40
-40
+2221
+1651
+80
+80
 10.0
 1
 14
@@ -407,10 +408,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--40
-40
--40
-40
+-80
+80
+-80
+80
 0
 0
 1
@@ -693,13 +694,13 @@ HORIZONTAL
 SLIDER
 16
 1011
-266
+273
 1044
 Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
-10000
-7725
+100000
+100000
 1
 1
 meters
@@ -708,13 +709,13 @@ HORIZONTAL
 SLIDER
 16
 1046
-264
+271
 1079
 Desert_Height_In_Meters
 Desert_Height_In_Meters
 100
-10000
-7833
+100000
+100000
 1
 1
 meters
@@ -957,7 +958,7 @@ extra_lead_t72_x_cor
 extra_lead_t72_x_cor
 min-pxcor
 max-pxcor
-11
+22
 1
 1
 NIL
@@ -972,7 +973,7 @@ extra_lead_t72_y_cor
 extra_lead_t72_y_cor
 min-pycor
 max-pycor
--27
+-20
 1
 1
 NIL
