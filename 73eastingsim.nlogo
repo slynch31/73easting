@@ -116,6 +116,20 @@ to setup-t72s
     ]
     set current-t72s current-t72s - 1
   ]
+  if extra-t72s = true
+  [
+    let i_extra 13 ;; there were 13 tanks
+    while [i_extra >= 1]
+    [
+      create-t72s 1 [set color red set size 5 setxy (extra_lead_t72_x_cor * i_extra) (extra_lead_t72_y_cor) set heading 315 set hp 1
+        set i_extra i_extra - 1
+      ]
+    ]
+  ]
+
+
+
+    ;; here we're going to setup the extra t72s that were off in the southern part of the desert in the initial run through.
   ;;if we have an even number of T72s we need to make the line accordingly.
   ;let initial-number-t72-mod initial-number-t72 - 1
   ;if initial-number-t72 mod 2 = 0 [ask last t72 die ] ;; mod 2
@@ -522,10 +536,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-7
-356
-185
-389
+19
+576
+197
+609
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
 1
@@ -533,10 +547,10 @@ M1A1_Thermal_Sights
 -1000
 
 SWITCH
-7
-434
-212
-467
+19
+654
+224
+687
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
 0
@@ -544,10 +558,10 @@ M1A1_Turret_Stablization
 -1000
 
 SWITCH
-6
-471
-122
-504
+18
+691
+134
+724
 M1A1_GPS
 M1A1_GPS
 0
@@ -555,10 +569,10 @@ M1A1_GPS
 -1000
 
 SWITCH
-4
-570
-171
-603
+14
+794
+181
+827
 T72_Thermal_Sights
 T72_Thermal_Sights
 0
@@ -566,10 +580,10 @@ T72_Thermal_Sights
 -1000
 
 SWITCH
-5
-643
-200
-676
+15
+867
+210
+900
 T72_Turret_Stablization
 T72_Turret_Stablization
 0
@@ -577,10 +591,10 @@ T72_Turret_Stablization
 -1000
 
 SWITCH
-6
-680
-111
-713
+16
+904
+121
+937
 T72_GPS
 T72_GPS
 0
@@ -621,10 +635,10 @@ scale_factor_x
 11
 
 SLIDER
-7
-395
-270
-428
+19
+615
+282
+648
 M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
@@ -646,10 +660,10 @@ Computed Values from Simulation
 1
 
 SLIDER
-6
-606
-258
-639
+16
+830
+268
+863
 T72_Thermal_Sights_Range
 T72_Thermal_Sights_Range
 50
@@ -661,10 +675,10 @@ meters
 HORIZONTAL
 
 SLIDER
-6
-787
-256
-820
+16
+1011
+266
+1044
 Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
@@ -676,10 +690,10 @@ meters
 HORIZONTAL
 
 SLIDER
-6
-822
-254
-855
+16
+1046
+264
+1079
 Desert_Height_In_Meters
 Desert_Height_In_Meters
 100
@@ -732,30 +746,30 @@ PENS
 "pen-1" 1.0 0 -2674135 true "" "plot count t72s"
 
 TEXTBOX
-10
-768
-160
-786
+20
+992
+170
+1010
 Desert Setup
 11
 0.0
 1
 
 TEXTBOX
-10
-549
-160
-567
+20
+773
+170
+791
 T-72 Setup
 11
 0.0
 1
 
 TEXTBOX
-9
-341
-159
-359
+21
+561
+171
+579
 M1A1 Setup
 11
 0.0
@@ -806,10 +820,10 @@ max-pxcor / scale_factor_x
 11
 
 SLIDER
-6
-860
-178
-893
+16
+1084
+188
+1117
 ridgeline_x_cor
 ridgeline_x_cor
 min-pxcor
@@ -832,20 +846,20 @@ ridgeline_x_meter
 11
 
 CHOOSER
-113
-682
-251
-727
+123
+906
+261
+951
 t72-formation
 t72-formation
 "|" "<" ">" "backslash" "/"
 0
 
 SLIDER
-6
-731
-178
-764
+16
+955
+188
+988
 t72-spacing
 t72-spacing
 0
@@ -857,10 +871,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-5
-515
-177
-548
+17
+735
+189
+768
 m1a1-spacing
 m1a1-spacing
 0
@@ -872,20 +886,20 @@ NIL
 HORIZONTAL
 
 CHOOSER
-125
-469
-263
-514
+137
+689
+275
+734
 m1a1-formation
 m1a1-formation
 "|" "<" ">" "backslash" "/"
 0
 
 SLIDER
-5
-898
-193
-931
+15
+1122
+203
+1155
 desert-visibility
 desert-visibility
 0
@@ -894,6 +908,88 @@ desert-visibility
 1
 1
 meters
+HORIZONTAL
+
+SWITCH
+7
+341
+121
+374
+extra-t72s
+extra-t72s
+0
+1
+-1000
+
+SWITCH
+7
+450
+110
+483
+coil-t72s
+coil-t72s
+1
+1
+-1000
+
+SLIDER
+7
+380
+179
+413
+extra_lead_t72_x_cor
+extra_lead_t72_x_cor
+min-pxcor
+max-pxcor
+-23
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+8
+415
+180
+448
+extra_lead_t72_y_cor
+extra_lead_t72_y_cor
+min-pycor
+max-pycor
+-27
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+7
+484
+179
+517
+coil_middle_t72_x_cor
+coil_middle_t72_x_cor
+min-pxcor
+max-pxcor
+40
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+8
+522
+180
+555
+coil_middle_t72_y_cor
+coil_middle_t72_y_cor
+min-pycor
+max-pycor
+40
+1
+1
+NIL
 HORIZONTAL
 
 @#$#@#$#@
