@@ -155,12 +155,20 @@ to setup-t72s
     let i_extra 13 ;; there were 13 tanks
     while [i_extra >= 1]
     [
-      create-t72s 1 [set color red set size 5 setxy (extra_lead_t72_x_cor + (t72-normalized-spacing_x * i_extra)) (extra_lead_t72_y_cor) set heading 315 set hp 1
-        set i_extra i_extra - 1
+      create-t72s 1 [set color red set size 5 setxy (extra_lead_t72_x_cor + (t72-normalized-spacing_x * i_extra)) (extra_lead_t72_y_cor) set heading 315 set hp 1]
+      set i_extra i_extra - 1
+    ]
+  ]
+    if coil-t72s = true
+  [
+    let i_coil 17 ;; there were 13 tanks
+    while [i_coil >= 1]
+    [
+      layout-circle create-t72s 1 [fd 10 set color red set size 5 setxy (extra_lead_t72_x_cor + (t72-normalized-spacing_x * i_coil)) (extra_lead_t72_y_cor) set heading 315 set hp 1
+        set i_coil i_coil - 1
       ]
     ]
   ]
-
 
 
 
@@ -963,7 +971,7 @@ SWITCH
 483
 coil-t72s
 coil-t72s
-0
+1
 1
 -1000
 
