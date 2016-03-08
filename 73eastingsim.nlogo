@@ -28,6 +28,7 @@ to setup
 end
 
 to reset
+  ;;we'll setup the battle of 73 easting as it occured historically in this function
   set initial-number-m1a1 9
   set initial-number-t72 8
   set lead_m1a1_y_cor 0
@@ -35,6 +36,7 @@ to reset
   set lead_t72_x_cor 20
   set lead_t72_y_cor 0
   set extra-t72s true
+
 
   end
 
