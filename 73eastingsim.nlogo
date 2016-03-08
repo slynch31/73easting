@@ -38,8 +38,8 @@ to setup-m1a1s
     if m1a1-formation = "|"
     [
       ifelse current-m1a1s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor (m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
-    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor (current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor (lead_m1a1_y_cor - m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor (lead_m1a1_y_cor - current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
     ]
     if m1a1-formation = "<"
     [
@@ -88,7 +88,7 @@ to setup-t72s
     [
       ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
     [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (lead_t72_y_cor - t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
-    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (current-t72s * (-1 * t72-normalized-spacing_y)) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (lead_t72_y_cor - current-t72s * (-1 * t72-normalized-spacing_y)) set heading 270 set hp 1]]
     ]
     if t72-formation = "<"
     [
@@ -499,7 +499,7 @@ lead_m1a1_y_cor
 lead_m1a1_y_cor
 min-pycor
 max-pycor
-0
+20
 1
 1
 NIL
