@@ -27,6 +27,19 @@ to setup
   reset-ticks
 end
 
+to reset
+  set initial-number-m1a1 9
+  set initial-number-t72 8
+  set lead_m1a1_y_cor 0
+  set lead_m1a1_x_cor -20
+  set lead_t72_x_cor 20
+  set lead_t72_y_cor 0
+  set extra-t72s true
+
+  end
+
+
+
 to setup-m1a1s
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
   let m1a1-normalized-spacing_x ((m1a1-spacing / 100) * ( max-pxcor)) / initial-number-m1a1 ;;normalize our m1a1 spacing...
@@ -389,8 +402,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-0
-0
+1
+1
 1
 -40
 40
@@ -413,9 +426,9 @@ Agent Model
 0
 
 BUTTON
-28
+97
 39
-91
+160
 72
 setup
 setup
@@ -430,10 +443,10 @@ NIL
 1
 
 BUTTON
-194
-41
-257
-74
+172
+39
+235
+72
 NIL
 go
 T
@@ -455,7 +468,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 200
-28
+9
 1
 1
 m1a1
@@ -470,7 +483,7 @@ initial-number-t72
 initial-number-t72
 0
 200
-36
+8
 1
 1
 t72
@@ -485,7 +498,7 @@ lead_m1a1_x_cor
 lead_m1a1_x_cor
 min-pxcor
 max-pxcor
--25
+-20
 1
 1
 NIL
@@ -500,7 +513,7 @@ lead_m1a1_y_cor
 lead_m1a1_y_cor
 min-pycor
 max-pycor
-20
+0
 1
 1
 NIL
@@ -515,7 +528,7 @@ lead_t72_x_cor
 lead_t72_x_cor
 min-pxcor
 max-pxcor
-18
+20
 1
 1
 NIL
@@ -530,7 +543,7 @@ lead_t72_y_cor
 lead_t72_y_cor
 min-pycor
 max-pycor
--22
+0
 1
 1
 NIL
@@ -576,7 +589,7 @@ SWITCH
 827
 T72_Thermal_Sights
 T72_Thermal_Sights
-0
+1
 1
 -1000
 
@@ -865,7 +878,7 @@ t72-spacing
 t72-spacing
 0
 100
-37
+30
 1
 1
 NIL
@@ -905,7 +918,7 @@ desert-visibility
 desert-visibility
 0
 20000
-231
+2081
 1
 1
 meters
@@ -942,7 +955,7 @@ extra_lead_t72_x_cor
 extra_lead_t72_x_cor
 min-pxcor
 max-pxcor
--23
+11
 1
 1
 NIL
@@ -992,6 +1005,23 @@ max-pycor
 1
 NIL
 HORIZONTAL
+
+BUTTON
+30
+40
+93
+73
+NIL
+reset
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
