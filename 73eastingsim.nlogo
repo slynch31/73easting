@@ -36,9 +36,27 @@ to reset
   set lead_t72_x_cor 20
   set lead_t72_y_cor 0
   set extra-t72s true
-
-
-
+  set extra_lead_t72_y_cor -8
+  set extra_lead_t72_x_cor 22
+  set coil-t72s true
+  set coil_middle_t72_x_cor 30
+  set coil_middle_t72_y_cor 20
+  set M1A1_Thermal_Sights true
+  set M1A1_Thermal_Sights_Range 2000
+  set M1A1_Turret_Stablization true
+  set M1A1_GPS true
+  set m1a1-formation "|"
+  set m1a1-spacing 10
+  set T72_Thermal_Sights false
+  set T72_Thermal_Sights_Range 1300
+  set T72_Turret_Stablization false
+  set T72_GPS false
+  set t72-formation "|"
+  set t72-spacing 10
+  set Desert_Length_In_Meters 10000
+  set Desert_Height_In_Meters 10000
+  set ridgeline_x_cor 0
+  set desert-visibility 50
   end
 
 
@@ -559,7 +577,7 @@ SWITCH
 609
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-1
+0
 1
 -1000
 
@@ -603,7 +621,7 @@ SWITCH
 900
 T72_Turret_Stablization
 T72_Turret_Stablization
-0
+1
 1
 -1000
 
@@ -614,7 +632,7 @@ SWITCH
 937
 T72_GPS
 T72_GPS
-0
+1
 1
 -1000
 
@@ -660,7 +678,7 @@ M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-1999
+2000
 1
 1
 meters
@@ -685,7 +703,7 @@ T72_Thermal_Sights_Range
 T72_Thermal_Sights_Range
 50
 2000
-2000
+1300
 1
 1
 meters
@@ -700,7 +718,7 @@ Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
 100000
-100000
+10000
 1
 1
 meters
@@ -715,7 +733,7 @@ Desert_Height_In_Meters
 Desert_Height_In_Meters
 100
 100000
-100000
+10000
 1
 1
 meters
@@ -881,7 +899,7 @@ t72-spacing
 t72-spacing
 0
 100
-30
+10
 1
 1
 NIL
@@ -896,7 +914,7 @@ m1a1-spacing
 m1a1-spacing
 0
 100
-24
+10
 1
 1
 NIL
@@ -921,7 +939,7 @@ desert-visibility
 desert-visibility
 0
 20000
-2081
+20000
 1
 1
 meters
@@ -945,7 +963,7 @@ SWITCH
 483
 coil-t72s
 coil-t72s
-1
+0
 1
 -1000
 
@@ -973,7 +991,7 @@ extra_lead_t72_y_cor
 extra_lead_t72_y_cor
 min-pycor
 max-pycor
--20
+-8
 1
 1
 NIL
@@ -988,7 +1006,7 @@ coil_middle_t72_x_cor
 coil_middle_t72_x_cor
 min-pxcor
 max-pxcor
-40
+30
 1
 1
 NIL
@@ -1003,7 +1021,7 @@ coil_middle_t72_y_cor
 coil_middle_t72_y_cor
 min-pycor
 max-pycor
-40
+20
 1
 1
 NIL
