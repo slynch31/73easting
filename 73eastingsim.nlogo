@@ -121,10 +121,11 @@ to setup-t72s
     let i_extra 13 ;; there were 13 tanks
     while [i_extra >= 1]
     [
-      ;create-t72s 1 [set color red set size 5 setxy (extra_lead_t72_x_cor * i_extra) (extra_lead_t72_y_cor) set heading 315 set hp 1
+      create-t72s 1 [set color red set size 5 setxy (extra_lead_t72_x_cor + (t72-normalized-spacing_x * i_extra)) (extra_lead_t72_y_cor) set heading 315 set hp 1
         set i_extra i_extra - 1
       ]
     ]
+  ]
 
 
 
