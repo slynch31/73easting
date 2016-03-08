@@ -39,8 +39,8 @@ to reset
   set extra_lead_t72_y_cor -8
   set extra_lead_t72_x_cor 22
   set coil-t72s true
-  set coil_middle_t72_x_cor 30
-  set coil_middle_t72_y_cor 20
+  set coil_middle_t72_x_cor 35
+  set coil_middle_t72_y_cor 10
   set M1A1_Thermal_Sights true
   set M1A1_Thermal_Sights_Range 2000
   set M1A1_Turret_Stablization true
@@ -159,21 +159,18 @@ to setup-t72s
       set i_extra i_extra - 1
     ]
   ]
-    if coil-t72s = true
+  if coil-t72s = true
   [
-      layout-circle t72s 10 ;setxy coil_middle_t72_x_cor coil_middle_t72_y_cor set hp 1 ;;hardcode 17 for right now, we can bring this out later if we need.
-      ;show "boop"
+  create-ordered-t72s 17 ;; we're going to make our circle of T72s using the same parameters as the other T72s
+      [
+      setxy coil_middle_t72_x_cor coil_middle_t72_y_cor
+      fd 10
+      set color red
+      set size 5
+      set hp 1
+      ]
+      ;layout-circle t72s 10 ;setxy coil_middle_t72_x_cor coil_middle_t72_y_cor set hp 1 ;;hardcode 17 for right now, we can bring this out later if we need.
   ]
-
-
-
-
-    ;; here we're going to setup the extra t72s that were off in the southern part of the desert in the initial run through.
-  ;;if we have an even number of T72s we need to make the line accordingly.
-  ;let initial-number-t72-mod initial-number-t72 - 1
-  ;if initial-number-t72 mod 2 = 0 [ask last t72 die ] ;; mod 2
-  ;;create the front T-72
-  ;create-t72s 1 [set color blue set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
 end
 
 to setup-technology
@@ -956,7 +953,7 @@ SWITCH
 374
 extra-t72s
 extra-t72s
-1
+0
 1
 -1000
 
@@ -1010,7 +1007,7 @@ coil_middle_t72_x_cor
 coil_middle_t72_x_cor
 min-pxcor
 max-pxcor
-30
+35
 1
 1
 NIL
@@ -1025,7 +1022,7 @@ coil_middle_t72_y_cor
 coil_middle_t72_y_cor
 min-pycor
 max-pycor
-20
+10
 1
 1
 NIL
