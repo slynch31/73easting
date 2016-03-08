@@ -447,10 +447,10 @@ Agent Model
 0
 
 BUTTON
-97
-39
-160
-72
+147
+40
+210
+73
 setup
 setup
 NIL
@@ -464,10 +464,10 @@ NIL
 1
 
 BUTTON
-172
-39
-235
-72
+211
+40
+274
+73
 NIL
 go
 T
@@ -939,7 +939,7 @@ desert-visibility
 desert-visibility
 0
 20000
-20000
+50
 1
 1
 meters
@@ -1028,11 +1028,11 @@ NIL
 HORIZONTAL
 
 BUTTON
-30
+-2
 40
-93
+146
 73
-NIL
+Historical Parameters
 reset
 NIL
 1
