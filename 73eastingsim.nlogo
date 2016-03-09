@@ -27,6 +27,40 @@ to setup
   reset-ticks
 end
 
+to reset
+  ;;we'll setup the battle of 73 easting as it occured historically in this function
+  set initial-number-m1a1 9
+  set initial-number-t72 8
+  set lead_m1a1_y_cor 0
+  set lead_m1a1_x_cor -20
+  set lead_t72_x_cor 20
+  set lead_t72_y_cor 0
+  set extra-t72s true
+  set extra_lead_t72_y_cor -8
+  set extra_lead_t72_x_cor 22
+  set coil-t72s true
+  set coil_middle_t72_x_cor 35
+  set coil_middle_t72_y_cor 10
+  set M1A1_Thermal_Sights true
+  set M1A1_Thermal_Sights_Range 2000
+  set M1A1_Turret_Stablization true
+  set M1A1_GPS true
+  set m1a1-formation "|"
+  set m1a1-spacing 10
+  set T72_Thermal_Sights false
+  set T72_Thermal_Sights_Range 1300
+  set T72_Turret_Stablization false
+  set T72_GPS false
+  set t72-formation "|"
+  set t72-spacing 10
+  set Desert_Length_In_Meters 10000
+  set Desert_Height_In_Meters 10000
+  set ridgeline_x_cor 0
+  set desert-visibility 50
+  end
+
+
+
 to setup-m1a1s
   set-default-shape m1a1s "m1a1" ;; make m1a1s their own shape
   let m1a1-normalized-spacing_x ((m1a1-spacing / 100) * ( max-pxcor)) / initial-number-m1a1 ;;normalize our m1a1 spacing...
@@ -38,8 +72,8 @@ to setup-m1a1s
     if m1a1-formation = "|"
     [
       ifelse current-m1a1s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor (m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
-    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor (current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor (lead_m1a1_y_cor - m1a1-normalized-spacing_y * current-m1a1s) set heading 90 set hp 1]]
+    [create-m1a1s 1 [set color blue set size 5 setxy lead_m1a1_x_cor (lead_m1a1_y_cor - current-m1a1s * (-1 * m1a1-normalized-spacing_y)) set heading 90 set hp 1]]
     ]
     if m1a1-formation = "<"
     [
@@ -87,8 +121,8 @@ to setup-t72s
     if t72-formation = "|"
     [
       ifelse current-t72s mod 2 = 1 ;;do this so we end up with the number of units we thought we'd end up with.
-    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
-    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (current-t72s * (-1 * t72-normalized-spacing_y)) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (lead_t72_y_cor - t72-normalized-spacing_y * current-t72s) set heading 270 set hp 1]]
+    [create-t72s 1 [set color red set size 5 setxy lead_t72_x_cor (lead_t72_y_cor - current-t72s * (-1 * t72-normalized-spacing_y)) set heading 270 set hp 1]]
     ]
     if t72-formation = "<"
     [
@@ -116,11 +150,27 @@ to setup-t72s
     ]
     set current-t72s current-t72s - 1
   ]
-  ;;if we have an even number of T72s we need to make the line accordingly.
-  ;let initial-number-t72-mod initial-number-t72 - 1
-  ;if initial-number-t72 mod 2 = 0 [ask last t72 die ] ;; mod 2
-  ;;create the front T-72
-  ;create-t72s 1 [set color blue set size 5 setxy lead_t72_x_cor lead_t72_y_cor set heading 270 set hp 1]
+  if extra-t72s = true
+  [
+    let i_extra 13 ;; there were 13 tanks
+    while [i_extra >= 1]
+    [
+      create-t72s 1 [set color red set size 5 setxy (extra_lead_t72_x_cor + (t72-normalized-spacing_x * i_extra)) (extra_lead_t72_y_cor) set heading 315 set hp 1]
+      set i_extra i_extra - 1
+    ]
+  ]
+  if coil-t72s = true
+  [
+  create-ordered-t72s 17 ;; we're going to make our circle of T72s using the same parameters as the other T72s
+      [
+      setxy coil_middle_t72_x_cor coil_middle_t72_y_cor
+      fd 10
+      set color red
+      set size 5
+      set hp 1
+      ]
+      ;layout-circle t72s 10 ;setxy coil_middle_t72_x_cor coil_middle_t72_y_cor set hp 1 ;;hardcode 17 for right now, we can bring this out later if we need.
+  ]
 end
 
 to setup-technology
@@ -363,10 +413,10 @@ end
 GRAPHICS-WINDOW
 601
 10
-1421
-851
-40
-40
+2221
+1651
+80
+80
 10.0
 1
 14
@@ -374,13 +424,13 @@ GRAPHICS-WINDOW
 1
 1
 0
-0
-0
 1
--40
-40
--40
-40
+1
+1
+-80
+80
+-80
+80
 0
 0
 1
@@ -398,10 +448,10 @@ Agent Model
 0
 
 BUTTON
-28
-39
-91
-72
+147
+40
+210
+73
 setup
 setup
 NIL
@@ -415,10 +465,10 @@ NIL
 1
 
 BUTTON
-194
-41
-257
-74
+211
+40
+274
+73
 NIL
 go
 T
@@ -440,7 +490,7 @@ initial-number-m1a1
 initial-number-m1a1
 0
 200
-28
+9
 1
 1
 m1a1
@@ -455,7 +505,7 @@ initial-number-t72
 initial-number-t72
 0
 200
-36
+8
 1
 1
 t72
@@ -470,7 +520,7 @@ lead_m1a1_x_cor
 lead_m1a1_x_cor
 min-pxcor
 max-pxcor
--25
+-20
 1
 1
 NIL
@@ -500,7 +550,7 @@ lead_t72_x_cor
 lead_t72_x_cor
 min-pxcor
 max-pxcor
-18
+20
 1
 1
 NIL
@@ -522,21 +572,21 @@ NIL
 HORIZONTAL
 
 SWITCH
-7
-356
-185
-389
+19
+576
+197
+609
 M1A1_Thermal_Sights
 M1A1_Thermal_Sights
-1
+0
 1
 -1000
 
 SWITCH
-7
-434
-212
-467
+19
+654
+224
+687
 M1A1_Turret_Stablization
 M1A1_Turret_Stablization
 0
@@ -544,10 +594,10 @@ M1A1_Turret_Stablization
 -1000
 
 SWITCH
-6
-471
-122
-504
+18
+691
+134
+724
 M1A1_GPS
 M1A1_GPS
 0
@@ -555,35 +605,35 @@ M1A1_GPS
 -1000
 
 SWITCH
-4
-570
-171
-603
+14
+794
+181
+827
 T72_Thermal_Sights
 T72_Thermal_Sights
-0
+1
 1
 -1000
 
 SWITCH
-5
-643
-200
-676
+15
+867
+210
+900
 T72_Turret_Stablization
 T72_Turret_Stablization
-0
+1
 1
 -1000
 
 SWITCH
-6
-680
-111
-713
+16
+904
+121
+937
 T72_GPS
 T72_GPS
-0
+1
 1
 -1000
 
@@ -621,15 +671,15 @@ scale_factor_x
 11
 
 SLIDER
-7
-395
-270
-428
+19
+615
+282
+648
 M1A1_Thermal_Sights_Range
 M1A1_Thermal_Sights_Range
 0
 2000
-1999
+2000
 1
 1
 meters
@@ -646,45 +696,45 @@ Computed Values from Simulation
 1
 
 SLIDER
-6
-606
-258
-639
+16
+830
+268
+863
 T72_Thermal_Sights_Range
 T72_Thermal_Sights_Range
 50
 2000
-2000
+1300
 1
 1
 meters
 HORIZONTAL
 
 SLIDER
-6
-787
-256
-820
+16
+1011
+273
+1044
 Desert_Length_In_Meters
 Desert_Length_In_Meters
 100
+100000
 10000
-7725
 1
 1
 meters
 HORIZONTAL
 
 SLIDER
-6
-822
-254
-855
+16
+1046
+271
+1079
 Desert_Height_In_Meters
 Desert_Height_In_Meters
 100
+100000
 10000
-7833
 1
 1
 meters
@@ -732,30 +782,30 @@ PENS
 "pen-1" 1.0 0 -2674135 true "" "plot count t72s"
 
 TEXTBOX
-10
-768
-160
-786
+20
+992
+170
+1010
 Desert Setup
 11
 0.0
 1
 
 TEXTBOX
-10
-549
-160
-567
+20
+773
+170
+791
 T-72 Setup
 11
 0.0
 1
 
 TEXTBOX
-9
-341
-159
-359
+21
+561
+171
+579
 M1A1 Setup
 11
 0.0
@@ -806,10 +856,10 @@ max-pxcor / scale_factor_x
 11
 
 SLIDER
-6
-860
-178
-893
+16
+1084
+188
+1117
 ridgeline_x_cor
 ridgeline_x_cor
 min-pxcor
@@ -832,69 +882,168 @@ ridgeline_x_meter
 11
 
 CHOOSER
-113
-682
-251
-727
+123
+906
+261
+951
 t72-formation
 t72-formation
 "|" "<" ">" "backslash" "/"
 0
 
 SLIDER
-6
-731
-178
-764
+16
+955
+188
+988
 t72-spacing
 t72-spacing
 0
 100
-37
+10
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-5
-515
-177
-548
+17
+735
+189
+768
 m1a1-spacing
 m1a1-spacing
 0
 100
-24
+10
 1
 1
 NIL
 HORIZONTAL
 
 CHOOSER
-125
-469
-263
-514
+137
+689
+275
+734
 m1a1-formation
 m1a1-formation
 "|" "<" ">" "backslash" "/"
 0
 
 SLIDER
-5
-898
-193
-931
+15
+1122
+203
+1155
 desert-visibility
 desert-visibility
 0
 20000
-231
+50
 1
 1
 meters
 HORIZONTAL
+
+SWITCH
+7
+341
+121
+374
+extra-t72s
+extra-t72s
+0
+1
+-1000
+
+SWITCH
+7
+450
+110
+483
+coil-t72s
+coil-t72s
+0
+1
+-1000
+
+SLIDER
+7
+380
+179
+413
+extra_lead_t72_x_cor
+extra_lead_t72_x_cor
+min-pxcor
+max-pxcor
+22
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+8
+415
+180
+448
+extra_lead_t72_y_cor
+extra_lead_t72_y_cor
+min-pycor
+max-pycor
+-8
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+7
+484
+179
+517
+coil_middle_t72_x_cor
+coil_middle_t72_x_cor
+min-pxcor
+max-pxcor
+35
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+8
+522
+180
+555
+coil_middle_t72_y_cor
+coil_middle_t72_y_cor
+min-pycor
+max-pycor
+10
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+-2
+40
+146
+73
+Historical Parameters
+reset
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
